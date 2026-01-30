@@ -26,11 +26,11 @@ export default function Home() {
             <a href="#modules" className="hover:text-slate-50">
               Module
             </a>
+            <a href="#dashboard" className="hover:text-slate-50">
+              Plattform
+            </a>
             <a href="#architecture" className="hover:text-slate-50">
               Architektur
-            </a>
-            <a href="#region" className="hover:text-slate-50">
-              Region
             </a>
             <a href="#contact" className="hover:text-slate-50">
               Pilot starten
@@ -77,7 +77,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Hero Panel */}
+          {/* Hero Panel – kompakte Workflow-Story */}
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-[0_0_40px_rgba(15,23,42,0.8)]">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-400">
               Beispiel-Workflow · Instandhaltung
@@ -88,29 +88,23 @@ export default function Home() {
             <ol className="mt-4 space-y-3 text-xs text-slate-200">
               <li>
                 <span className="font-semibold text-cyan-300">1.</span>{" "}
-                Technical Intelligence (HydraulikDoc) findet das richtige
-                Zylinder- oder Ventil-Datenblatt in Sekunden.
+                HydraulikDoc findet in Sekunden das richtige Datenblatt.
               </li>
               <li>
                 <span className="font-semibold text-cyan-300">2.</span>{" "}
-                Contract Intelligence prüft Service- und Garantiebedingungen
-                in den Wartungsverträgen.
+                Contract Intelligence prüft Service- und Garantiebedingungen.
               </li>
               <li>
                 <span className="font-semibold text-cyan-300">3.</span>{" "}
-                Finance Intelligence erstellt Bestellung, Kontierungsvorschlag
-                und DATEV-Export.
+                Finance Intelligence bereitet Bestellung, Kontierung und
+                DATEV-Export vor.
               </li>
               <li>
                 <span className="font-semibold text-cyan-300">4.</span>{" "}
                 n8n-Workflows orchestrieren Freigaben, SAP-Bestellung und
-                Rückmeldung an das Service-Team.
+                Rückmeldung an das Team.
               </li>
             </ol>
-            <p className="mt-4 border-t border-slate-800 pt-3 text-[11px] text-slate-400">
-              Ergebnis: weniger Stillstandszeit, weniger E-Mail-Pingpong, mehr
-              Transparenz im kompletten Rhein-Neckar-Werkverbund.
-            </p>
           </div>
         </section>
 
@@ -122,30 +116,25 @@ export default function Home() {
           <p className="mt-3 max-w-2xl text-sm text-slate-300">
             Finance, Legal und Technik arbeiten selten im gleichen System.
             SBS Nexus verbindet diese Welten zu durchgängigen Workflows für
-            Maschinenbau, Automotiv-Zulieferer und Industrie im
-            Rhein-Neckar-Odenwald-Raum.
+            Maschinenbau, Zulieferer und Industrie im Rhein-Neckar-Odenwald-Raum.
           </p>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {/* Finance */}
             <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
                 Finance Intelligence
               </div>
               <h3 className="mt-2 text-sm font-semibold">
-                Rechnungsverarbeitung, die DATEV versteht
+                KI-Rechnungsverarbeitung mit DATEV-Export
               </h3>
               <p className="mt-3 text-xs text-slate-300">
-                KI-gestützte Eingangsrechnungen mit Extraktion, Duplicate-Check,
-                Kontierungsvorschlägen und DATEV-Export. Entwickelt für
-                Finance-Teams mit 200–10.000 Belegen pro Monat.
+                Automatische Extraktion, Duplicate-Check, Kontierungsvorschläge
+                und DATEV-Export – für Finance-Teams mit 200–10.000 Belegen
+                pro Monat.
               </p>
-              <ul className="mt-4 space-y-1.5 text-[11px] text-slate-300">
-                <li>• Upload aus E-Mail-Postfächern, Portalen oder Scannern</li>
-                <li>• Kontierung & Kostenstellenvorschlag nach Buchungslogik</li>
-                <li>• Export nach DATEV, Lexware & SAP FI</li>
-              </ul>
             </div>
-
+            {/* Contract */}
             <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-300">
                 Contract Intelligence
@@ -154,17 +143,11 @@ export default function Home() {
                 Verträge, Fristen und Risiken im Griff
               </h3>
               <p className="mt-3 text-xs text-slate-300">
-                Automatisierte Analyse von Lieferanten-, Wartungs- und
-                SaaS-Verträgen mit Risikoscore, Fristenkalender und
-                Klauselvergleich – in deutscher und englischer Sprache.
+                Risiko-Scoring, Fristenkalender und Vertragsregister für
+                Lieferanten-, Wartungs- und SaaS-Verträge – inklusive Copilot.
               </p>
-              <ul className="mt-4 space-y-1.5 text-[11px] text-slate-300">
-                <li>• Erkennung von Kündigungs- und Verlängerungsklauseln</li>
-                <li>• Risiko-Scoring je Vertrag und Vertragspartner</li>
-                <li>• Integration in Finance- und ERP-Prozesse</li>
-              </ul>
             </div>
-
+            {/* Technical */}
             <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
                 Technical Intelligence
@@ -173,15 +156,195 @@ export default function Home() {
                 HydraulikDoc für Service & Konstruktion
               </h3>
               <p className="mt-3 text-xs text-slate-300">
-                Technische Dokumenten-KI für Zylinder, Ventile und Antriebe.
-                80-seitige Datenblätter werden zu einem dialogfähigen Assistenten
-                für Instandhaltung und Engineering.
+                Technische Dokumenten-KI, die 80-seitige Datenblätter in einen
+                dialogfähigen Assistenten für Instandhaltung und Engineering
+                verwandelt.
               </p>
-              <ul className="mt-4 space-y-1.5 text-[11px] text-slate-300">
-                <li>• Volltextsuche mit Kontext und Seitenangaben</li>
-                <li>• Prüfung von Parametern wie Prüfdruck, Medien, Temperatur</li>
-                <li>• Vorbereitung von Service-Reports und Ersatzteil-Listen</li>
-              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Dashboard Preview – Hybrid mit App-Design */}
+        <section
+          id="dashboard"
+          className="mt-16 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 md:mt-20 md:p-7"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
+                SBS Plattform · Dashboard
+              </p>
+              <h2 className="mt-1 text-sm font-semibold md:text-base">
+                Alle SBS Produkte in einem App-Shell
+              </h2>
+              <p className="mt-2 max-w-xl text-xs text-slate-300">
+                Design angelehnt an deine bestehende SBS-App: klare Karten,
+                Kennzahlen und Quick Actions – nur ohne echte Daten, optimiert
+                als Vorschau für Entscheider.
+              </p>
+            </div>
+            <div className="flex gap-2 text-[11px] text-slate-300">
+              <span className="rounded-full border border-slate-700 px-3 py-1">
+                Rechnungen
+              </span>
+              <span className="rounded-full border border-slate-700 px-3 py-1">
+                Verträge
+              </span>
+              <span className="rounded-full border border-slate-700 px-3 py-1">
+                Kennzahlen
+              </span>
+            </div>
+          </div>
+
+          {/* Cards-Grid im Stil deines Dashboards, aber mit Tailwind */}
+          <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+            {/* Product cards */}
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Invoice card */}
+              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 shadow-md">
+                <div className="mb-2 flex items-start justify-between gap-2">
+                  <h3 className="text-xs font-semibold text-slate-50">
+                    🧾 KI-Rechnungsverarbeitung
+                  </h3>
+                  <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
+                    Enterprise
+                  </span>
+                </div>
+                <p className="mb-3 text-[11px] text-slate-300">
+                  Automatische Extraktion, DATEV-Export & Finance Copilot.
+                </p>
+                <div className="mb-3">
+                  <div className="flex justify-between text-[11px] text-slate-400">
+                    <span>Verbrauch diesen Monat</span>
+                    <span>133 / ∞</span>
+                  </div>
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-800">
+                    <div className="h-full w-[38%] rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500" />
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 text-[11px]">
+                  <span className="rounded-md bg-cyan-500/10 px-2 py-1 text-cyan-200">
+                    📤 Rechnungen hochladen
+                  </span>
+                  <span className="rounded-md bg-slate-800 px-2 py-1 text-slate-200">
+                    🤖 Finance Copilot
+                  </span>
+                </div>
+              </div>
+
+              {/* Contract card */}
+              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 shadow-md">
+                <div className="mb-2 flex items-start justify-between gap-2">
+                  <h3 className="text-xs font-semibold text-slate-50">
+                    📋 KI-Vertragsanalyse
+                  </h3>
+                  <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-violet-300">
+                    Enterprise
+                  </span>
+                </div>
+                <p className="mb-3 text-[11px] text-slate-300">
+                  Risiko-Erkennung, Fristen-Management & Vertragsregister.
+                </p>
+                <div className="mb-3">
+                  <div className="flex justify-between text-[11px] text-slate-400">
+                    <span>Verbrauch diesen Monat</span>
+                    <span>0 / ∞</span>
+                  </div>
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-800">
+                    <div className="h-full w-[4%] rounded-full bg-gradient-to-r from-violet-400 to-violet-500" />
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 text-[11px]">
+                  <span className="rounded-md bg-violet-500/10 px-2 py-1 text-violet-200">
+                    📤 Vertrag analysieren
+                  </span>
+                  <span className="rounded-md bg-slate-800 px-2 py-1 text-slate-200">
+                    📁 Vertragsregister
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats + Aktivitäten Preview */}
+            <div className="space-y-4">
+              {/* Stats */}
+              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+                <p className="mb-3 text-[11px] font-semibold text-slate-200">
+                  📈 Kennzahlen (Beispiel)
+                </p>
+                <div className="grid grid-cols-2 gap-3 text-center">
+                  <div className="rounded-lg bg-slate-900/80 p-3">
+                    <div className="text-lg font-bold text-cyan-300">133</div>
+                    <div className="text-[11px] text-slate-400">
+                      Rechnungen verarbeitet
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-slate-900/80 p-3">
+                    <div className="text-lg font-bold text-violet-300">0</div>
+                    <div className="text-[11px] text-slate-400">
+                      Verträge analysiert
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-slate-900/80 p-3">
+                    <div className="text-lg font-bold text-emerald-300">
+                      399h
+                    </div>
+                    <div className="text-[11px] text-slate-400">
+                      Zeitersparnis (Schätzung)
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-slate-900/80 p-3">
+                    <div className="text-lg font-bold text-slate-100">
+                      €332
+                    </div>
+                    <div className="text-[11px] text-slate-400">
+                      direkte Kosteneinsparung
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Activity */}
+              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+                <p className="mb-3 text-[11px] font-semibold text-slate-200">
+                  🕐 Letzte Aktivitäten (Beispieldaten)
+                </p>
+                <ul className="space-y-2.5 text-[11px] text-slate-200">
+                  <li className="flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-500/10">
+                      🧾
+                    </span>
+                    <div className="flex-1">
+                      <div>Rechnung INV-1544498 · Lieblingsgarn GmbH</div>
+                      <div className="text-[10px] text-slate-400">
+                        2026-01-28 · 11:24
+                      </div>
+                    </div>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-500/10">
+                      🧾
+                    </span>
+                    <div className="flex-1">
+                      <div>VRG25-261966 · FILATI eCommerce GmbH</div>
+                      <div className="text-[10px] text-slate-400">
+                        2026-01-28 · 11:24
+                      </div>
+                    </div>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-500/10">
+                      🧾
+                    </span>
+                    <div className="flex-1">
+                      <div>RE-000095 · Total</div>
+                      <div className="text-[10px] text-slate-400">
+                        2026-01-27 · 11:30
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
@@ -197,43 +360,10 @@ export default function Home() {
             Storage und n8n als Workflow-Engine. Konzipiert für Audits,
             Due Diligence und IT-Security-Teams.
           </p>
-
-          <div className="mt-6 grid gap-4 text-[11px] text-slate-300 md:grid-cols-3">
-            <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-4">
-              <div className="text-xs font-semibold text-slate-100">
-                Daten & Compliance
-              </div>
-              <ul className="mt-2 space-y-1.5">
-                <li>• Speicherung in deutschen Rechenzentren</li>
-                <li>• Mandantengetrennte Datenhaltung</li>
-                <li>• AV-Verträge mit Infrastruktur-Providern</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-4">
-              <div className="text-xs font-semibold text-slate-100">
-                Integration
-              </div>
-              <ul className="mt-2 space-y-1.5">
-                <li>• SAP S/4HANA & ECC via OData/REST</li>
-                <li>• DATEV & Buchhaltungssoftware im DACH-Raum</li>
-                <li>• Messaging & Ticketing (Teams, Slack, Jira)</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-4">
-              <div className="text-xs font-semibold text-slate-100">
-                Betrieb
-              </div>
-              <ul className="mt-2 space-y-1.5">
-                <li>• Monitoring & Logging zentralisiert</li>
-                <li>• API-first-Ansatz für alle Module</li>
-                <li>• Staging-Umgebungen für Pilotkunden</li>
-              </ul>
-            </div>
-          </div>
         </section>
 
         {/* Region */}
-        <section id="region" className="mt-16 md:mt-20">
+        <section className="mt-16 md:mt-20">
           <h2 className="text-xl font-semibold tracking-tight">
             Verwurzelt in der Region Rhein-Neckar-Odenwald
           </h2>
