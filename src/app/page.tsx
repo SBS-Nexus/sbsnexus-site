@@ -271,11 +271,11 @@ export default function Home() {
             <p>
               Oder direkt einen Termin buchen:{" "}
               <a
-                href="https://calendly.com/DEIN-CALENDLY-LINK"
+                href="https://calendly.com/ki-sbsdeutschland/sbs-nexus-30-minuten-discovery-call"
                 target="_blank"
                 className="underline underline-offset-2"
               >
-                30-Minuten-Demo
+                30-Minuten-Discovery-Call
               </a>
             </p>
           </div>
