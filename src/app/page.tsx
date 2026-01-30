@@ -43,10 +43,7 @@ export default function Home() {
           <div>
             <h1 className="text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
               Das operative OS für den{" "}
-              <span className="text-cyan-400">
-                fertigenden Mittelstand
-              </span>
-              .
+              <span className="text-cyan-400">fertigenden Mittelstand</span>.
             </h1>
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-slate-300 md:text-base">
               SBS Nexus verbindet Rechnungsverarbeitung, Vertragsanalyse und
@@ -77,7 +74,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Hero Panel – kompakte Workflow-Story */}
+        {/* Hero Panel */}
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-[0_0_40px_rgba(15,23,42,0.8)]">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-400">
               Beispiel-Workflow · Instandhaltung
@@ -120,7 +117,6 @@ export default function Home() {
           </p>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {/* Finance */}
             <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
                 Finance Intelligence
@@ -134,7 +130,7 @@ export default function Home() {
                 pro Monat.
               </p>
             </div>
-            {/* Contract */}
+
             <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-300">
                 Contract Intelligence
@@ -147,7 +143,7 @@ export default function Home() {
                 Lieferanten-, Wartungs- und SaaS-Verträge – inklusive Copilot.
               </p>
             </div>
-            {/* Technical */}
+
             <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
                 Technical Intelligence
@@ -164,7 +160,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Dashboard Preview – Hybrid mit App-Design */}
+        {/* Dashboard – simuliertes Nexus-Run-Widget */}
         <section
           id="dashboard"
           className="mt-16 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 md:mt-20 md:p-7"
@@ -172,174 +168,188 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                SBS Plattform · Dashboard
+                Live-Szenario · Nexus im Werkseinsatz
               </p>
               <h2 className="mt-1 text-sm font-semibold md:text-base">
-                Alle SBS Produkte in einem App-Shell
+                Ein kompletter Durchlauf – vom Ausfall bis zur Buchung
               </h2>
               <p className="mt-2 max-w-xl text-xs text-slate-300">
-                Design angelehnt an deine bestehende SBS-App: klare Karten,
-                Kennzahlen und Quick Actions – nur ohne echte Daten, optimiert
-                als Vorschau für Entscheider.
+                Das Widget simuliert einen typischen Tag in einem Werk im
+                Rhein-Neckar-Odenwald-Kreis: Rechnungen, Verträge und Servicefälle
+                laufen über SBS Nexus – Finance, Contract und Technical Intelligence
+                spielen zusammen.
               </p>
             </div>
             <div className="flex gap-2 text-[11px] text-slate-300">
               <span className="rounded-full border border-slate-700 px-3 py-1">
-                Rechnungen
+                Werk Rhein-Neckar
               </span>
               <span className="rounded-full border border-slate-700 px-3 py-1">
-                Verträge
+                Lieferant &amp; Service
               </span>
               <span className="rounded-full border border-slate-700 px-3 py-1">
-                Kennzahlen
+                Finance &amp; Controlling
               </span>
             </div>
           </div>
 
-          {/* Cards-Grid im Stil deines Dashboards, aber mit Tailwind */}
           <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-            {/* Product cards */}
+            {/* Linke Seite */}
             <div className="grid gap-4 md:grid-cols-2">
-              {/* Invoice card */}
               <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 shadow-md">
                 <div className="mb-2 flex items-start justify-between gap-2">
                   <h3 className="text-xs font-semibold text-slate-50">
-                    🧾 KI-Rechnungsverarbeitung
+                    🧾 Finance Run – Januar
                   </h3>
                   <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                    Enterprise
+                    Live
                   </span>
                 </div>
                 <p className="mb-3 text-[11px] text-slate-300">
-                  Automatische Extraktion, DATEV-Export & Finance Copilot.
+                  Eingangsrechnungen aus E-Mail, Portalen und Scannern werden
+                  automatisch gelesen, geprüft und zur Freigabe vorbereitet.
                 </p>
                 <div className="mb-3">
                   <div className="flex justify-between text-[11px] text-slate-400">
-                    <span>Verbrauch diesen Monat</span>
-                    <span>133 / ∞</span>
+                    <span>Rechnungen verarbeitet</span>
+                    <span>133 / Monat</span>
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full w-[38%] rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500" />
+                    <div className="h-full w-[72%] rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500" />
                   </div>
                 </div>
+                <ul className="mb-3 space-y-1.5 text-[11px] text-slate-300">
+                  <li>• 92% automatisch kontiert</li>
+                  <li>• 0 doppelte Rechnungen durch Duplicate-Check</li>
+                  <li>• Export bereit für DATEV &amp; SAP FI</li>
+                </ul>
                 <div className="flex flex-wrap gap-2 text-[11px]">
                   <span className="rounded-md bg-cyan-500/10 px-2 py-1 text-cyan-200">
-                    📤 Rechnungen hochladen
+                    📤 Upload-Postfach
                   </span>
                   <span className="rounded-md bg-slate-800 px-2 py-1 text-slate-200">
-                    🤖 Finance Copilot
+                    🤖 Finance Copilot öffnen
                   </span>
                 </div>
               </div>
 
-              {/* Contract card */}
               <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 shadow-md">
                 <div className="mb-2 flex items-start justify-between gap-2">
                   <h3 className="text-xs font-semibold text-slate-50">
-                    📋 KI-Vertragsanalyse
+                    📋 Vertrags- &amp; Service-Run
                   </h3>
                   <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-violet-300">
-                    Enterprise
+                    Live
                   </span>
                 </div>
                 <p className="mb-3 text-[11px] text-slate-300">
-                  Risiko-Erkennung, Fristen-Management & Vertragsregister.
+                  Wartungsverträge, Service-Level und Garantiebedingungen werden
+                  mit laufenden Fällen verknüpft – inklusive Fristen-Monitoring.
                 </p>
                 <div className="mb-3">
                   <div className="flex justify-between text-[11px] text-slate-400">
-                    <span>Verbrauch diesen Monat</span>
-                    <span>0 / ∞</span>
+                    <span>Verträge im Register</span>
+                    <span>214 aktiv</span>
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full w-[4%] rounded-full bg-gradient-to-r from-violet-400 to-violet-500" />
+                    <div className="h-full w-[54%] rounded-full bg-gradient-to-r from-violet-400 to-violet-500" />
                   </div>
                 </div>
+                <ul className="mb-3 space-y-1.5 text-[11px] text-slate-300">
+                  <li>• 17 Verträge mit kritischen Fristen &lt; 90 Tage</li>
+                  <li>• 5 Serviceverträge mit unklaren Haftungsgrenzen</li>
+                  <li>• Alerts an Einkauf &amp; Geschäftsführung</li>
+                </ul>
                 <div className="flex flex-wrap gap-2 text-[11px]">
                   <span className="rounded-md bg-violet-500/10 px-2 py-1 text-violet-200">
-                    📤 Vertrag analysieren
+                    📁 Vertragsregister öffnen
                   </span>
                   <span className="rounded-md bg-slate-800 px-2 py-1 text-slate-200">
-                    📁 Vertragsregister
+                    🤖 Contract Copilot Frage stellen
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Stats + Aktivitäten Preview */}
+            {/* Rechte Seite */}
             <div className="space-y-4">
-              {/* Stats */}
               <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
                 <p className="mb-3 text-[11px] font-semibold text-slate-200">
-                  📈 Kennzahlen (Beispiel)
+                  📈 Wirkung im Werkverbund (simuliert)
                 </p>
                 <div className="grid grid-cols-2 gap-3 text-center">
-                  <div className="rounded-lg bg-slate-900/80 p-3">
-                    <div className="text-lg font-bold text-cyan-300">133</div>
-                    <div className="text-[11px] text-slate-400">
-                      Rechnungen verarbeitet
-                    </div>
-                  </div>
-                  <div className="rounded-lg bg-slate-900/80 p-3">
-                    <div className="text-lg font-bold text-violet-300">0</div>
-                    <div className="text-[11px] text-slate-400">
-                      Verträge analysiert
-                    </div>
-                  </div>
                   <div className="rounded-lg bg-slate-900/80 p-3">
                     <div className="text-lg font-bold text-emerald-300">
                       399h
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      Zeitersparnis (Schätzung)
+                      Zeitersparnis pro Jahr
                     </div>
                   </div>
                   <div className="rounded-lg bg-slate-900/80 p-3">
                     <div className="text-lg font-bold text-slate-100">
-                      €332
+                      €332k
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      direkte Kosteneinsparung
+                      gebundene Liquidität reduziert
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-slate-900/80 p-3">
+                    <div className="text-lg font-bold text-cyan-300">
+                      3 Werke
+                    </div>
+                    <div className="text-[11px] text-slate-400">
+                      im Verbund live auf Nexus
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-slate-900/80 p-3">
+                    <div className="text-lg font-bold text-violet-300">
+                      0
+                    </div>
+                    <div className="text-[11px] text-slate-400">
+                      verpasste Kündigungsfristen
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Activity */}
               <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
                 <p className="mb-3 text-[11px] font-semibold text-slate-200">
-                  🕐 Letzte Aktivitäten (Beispieldaten)
+                  🕐 Letzter Nexus-Run (Simulation)
                 </p>
                 <ul className="space-y-2.5 text-[11px] text-slate-200">
                   <li className="flex items-center gap-2">
                     <span className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-500/10">
-                      🧾
+                      ⚙️
                     </span>
                     <div className="flex-1">
-                      <div>Rechnung INV-1544498 · Lieblingsgarn GmbH</div>
+                      <div>HydraulikDoc identifiziert Ersatzteil für Linie A</div>
                       <div className="text-[10px] text-slate-400">
-                        2026-01-28 · 11:24
+                        07:32 Uhr · Werk 1 · Instandhaltung
                       </div>
                     </div>
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-500/10">
-                      🧾
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-violet-500/10">
+                      📋
                     </span>
                     <div className="flex-1">
-                      <div>VRG25-261966 · FILATI eCommerce GmbH</div>
+                      <div>
+                        Vertrag mit Servicepartner X als „Medium Risk“ eingestuft
+                      </div>
                       <div className="text-[10px] text-slate-400">
-                        2026-01-28 · 11:24
+                        07:35 Uhr · Einkauf &amp; Legal
                       </div>
                     </div>
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-500/10">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-500/10">
                       🧾
                     </span>
                     <div className="flex-1">
-                      <div>RE-000095 · Total</div>
+                      <div>Bestellung &amp; Kontierung für Ersatzteil gebucht</div>
                       <div className="text-[10px] text-slate-400">
-                        2026-01-27 · 11:30
+                        07:41 Uhr · Finance &amp; Controlling
                       </div>
                     </div>
                   </li>
@@ -375,7 +385,7 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Contact / Pilot */}
+        {/* Contact */}
         <section
           id="contact"
           className="mt-16 border-t border-slate-900 pt-8 md:mt-20"
@@ -419,4 +429,3 @@ export default function Home() {
     </main>
   );
 }
-
