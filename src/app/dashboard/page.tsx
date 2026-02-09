@@ -32,7 +32,7 @@ interface MonthlyData {
 }
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<{id: number; name: string; email: string; is_admin: boolean} | null>(null);
+  const [user, setUser] = useState<{id: number; name: string; email?: string; is_admin?: boolean; role?: string} | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [health, setHealth] = useState<Health | null>(null);
