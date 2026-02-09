@@ -47,7 +47,7 @@ export default function AdminPage() {
     const stored = localStorage.getItem("sbs_user");
     if (!stored) { router.push("/login"); return; }
     const userData = JSON.parse(stored);
-    if (!(userData.is_admin || userData.role === "admin") || userData.role === "admin") { router.push("/dashboard"); return; }
+    if (!(userData.is_admin || userData.role === "admin")) { router.push("/dashboard"); return; }
     setUser(userData);
     loadData();
   }, [router]);
