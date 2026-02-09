@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function RegisterPage() {
@@ -9,7 +10,12 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState<"verify" | "direct" | null>(null);
+  const router = useRouter();
+
+  const isCompanyEmail = (email: string) => {
+    return email.endsWith("@sbsdeutschland.de") || email.endsWith("@sbsdeutschland.com");
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +31,12 @@ export default function RegisterPage() {
       const data = await res.json();
       
       if (data.success) {
-        setSuccess(true);
+        if (isCompanyEmail(email)) {
+          setSuccess("direct");
+          setTimeout(() => router.push("/login?registered=true"), 2000);
+        } else {
+          setSuccess("verify");
+        }
       } else {
         setError(data.detail || "Registrierung fehlgeschlagen");
       }
@@ -44,7 +55,13 @@ export default function RegisterPage() {
         </div>
         
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          {success ? (
+          {success === "direct" ? (
+            <div className="text-center">
+              <span className="text-5xl">✅</span>
+              <h2 className="text-xl font-bold text-gray-900 mt-4">Willkommen im Team!</h2>
+              <p className="text-gray-600 mt-2">Ihr Admin-Konto wurde erstellt. Sie werden zum Login weitergeleitet...</p>
+            </div>
+          ) : success === "verify" ? (
             <div className="text-center">
               <span className="text-5xl">📧</span>
               <h2 className="text-xl font-bold text-gray-900 mt-4">Fast geschafft!</h2>
