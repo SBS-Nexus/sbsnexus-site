@@ -1,0 +1,125 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+interface User {
+  id: number;
+  email: string;
+  name: string;
+  is_admin: boolean;
+  is_active: boolean;
+  created_at: string;
+  last_login: string | null;
+}
+
+export default function AdminPage() {
+  const [user, setUser] = useState<{id: number, name: string, role: string} | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("sbs_user");
+    const token = localStorage.getItem("sbs_token");
+    if (!savedUser || !token) { router.push("/login"); return; }
+    
+    const userData = JSON.parse(savedUser);
+    if (userData.role !== "admin") { router.push("/dashboard"); return; }
+    setUser(userData);
+    
+    fetchUsers(token);
+  }, [router]);
+
+  async function fetchUsers(token: string) {
+    try {
+      const res = await fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", {
+        headers: { "Authorization": token }
+      });
+      const data = await res.json();
+      if (data.users) setUsers(data.users);
+      else setError(data.detail || "Fehler");
+    } catch { setError("Verbindungsfehler"); }
+    setLoading(false);
+  }
+
+  async function deleteUser(userId: number) {
+    if (!confirm("User wirklich löschen?")) return;
+    const token = localStorage.getItem("sbs_token");
+    await fetch(`https://app.sbsdeutschland.com/api/nexus/admin/users/${userId}`, {
+      method: "DELETE",
+      headers: { "Authorization": token || "" }
+    });
+    setUsers(users.filter(u => u.id !== userId));
+  }
+
+  if (!user) return null;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-gradient-to-r from-slate-900 to-slate-800 text-white">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">👤 Admin Panel</h1>
+              <p className="text-slate-300">User-Verwaltung</p>
+            </div>
+            <a href="/dashboard" className="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg">← Dashboard</a>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {error && <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6">{error}</div>}
+        
+        <div className="bg-white rounded-xl border overflow-hidden">
+          <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
+            <h2 className="font-semibold">User ({users.length})</h2>
+          </div>
+          
+          {loading ? (
+            <div className="p-8 text-center text-gray-500">Laden...</div>
+          ) : (
+            <table className="w-full">
+              <thead className="bg-gray-50 text-left text-sm text-gray-600">
+                <tr>
+                  <th className="px-4 py-3">ID</th>
+                  <th className="px-4 py-3">Name</th>
+                  <th className="px-4 py-3">E-Mail</th>
+                  <th className="px-4 py-3">Rolle</th>
+                  <th className="px-4 py-3">Erstellt</th>
+                  <th className="px-4 py-3">Letzter Login</th>
+                  <th className="px-4 py-3">Aktion</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {users.map(u => (
+                  <tr key={u.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm">{u.id}</td>
+                    <td className="px-4 py-3 font-medium">{u.name}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{u.email}</td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-xs ${u.is_admin ? "bg-purple-100 text-purple-700" : "bg-gray-100 text-gray-600"}`}>
+                        {u.is_admin ? "Admin" : "User"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500">{u.created_at?.split(" ")[0]}</td>
+                    <td className="px-4 py-3 text-sm text-gray-500">{u.last_login?.split("T")[0] || "-"}</td>
+                    <td className="px-4 py-3">
+                      {u.id !== user.id && (
+                        <button onClick={() => deleteUser(u.id)} className="text-red-600 hover:text-red-800 text-sm">
+                          Löschen
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
