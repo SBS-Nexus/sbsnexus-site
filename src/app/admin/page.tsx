@@ -84,7 +84,7 @@ export default function AdminPage() {
         fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", { headers: authHeaders() }),
         fetch("https://app.sbsdeutschland.com/api/nexus/admin/stats", { headers: authHeaders() })
       ]);
-      if (usersRes.ok) setUsers(await usersRes.json());
+      if (usersRes.ok) { const data = await usersRes.json(); setUsers(data.users || data); }
       if (statsRes.ok) setStats(await statsRes.json());
     } catch {}
     setLoading(false);
