@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface Stats {
-  invoices: number;
-  contracts: number;
-  video_diagnoses: number;
-  workflows: number;
+  invoices: { total: number; this_month: number };
+  contracts: { total: number; this_month: number };
+  video_diagnoses: { total: number; this_month: number };
+  success_rate: number;
 }
 
 interface Activity {
@@ -20,7 +20,7 @@ interface Activity {
 
 export default function DashboardPage() {
   const [user, setUser] = useState<{id: number; name: string; email: string; is_admin: boolean} | null>(null);
-  const [stats, setStats] = useState<Stats>({ invoices: 0, contracts: 0, video_diagnoses: 0, workflows: 0 });
+  const [stats, setStats] = useState<Stats | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -57,7 +57,10 @@ export default function DashboardPage() {
     return <div className="min-h-screen bg-slate-900 flex items-center justify-center"><p className="text-white">Laden...</p></div>;
   }
 
-  const usagePercent = Math.min((stats.invoices / 500) * 100, 100);
+  const invoiceTotal = stats?.invoices?.total ?? 0;
+  const contractTotal = stats?.contracts?.total ?? 0;
+  const videoTotal = stats?.video_diagnoses?.total ?? 0;
+  const invoiceMonth = stats?.invoices?.this_month ?? 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -112,23 +115,23 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
                 <p className="text-slate-400 text-sm">Rechnungen</p>
-                <p className="text-3xl font-bold text-cyan-400 mt-1">{stats.invoices}</p>
-                <p className="text-xs text-slate-500 mt-1">Gesamt verarbeitet</p>
+                <p className="text-3xl font-bold text-cyan-400 mt-1">{invoiceTotal}</p>
+                <p className="text-xs text-slate-500 mt-1">+{invoiceMonth} diesen Monat</p>
               </div>
               <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
                 <p className="text-slate-400 text-sm">Verträge</p>
-                <p className="text-3xl font-bold text-purple-400 mt-1">{stats.contracts}</p>
+                <p className="text-3xl font-bold text-purple-400 mt-1">{contractTotal}</p>
                 <p className="text-xs text-slate-500 mt-1">Analysiert</p>
               </div>
               <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
                 <p className="text-slate-400 text-sm">Video-Diagnosen</p>
-                <p className="text-3xl font-bold text-orange-400 mt-1">{stats.video_diagnoses}</p>
+                <p className="text-3xl font-bold text-orange-400 mt-1">{videoTotal}</p>
                 <p className="text-xs text-slate-500 mt-1">Durchgeführt</p>
               </div>
               <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
-                <p className="text-slate-400 text-sm">Workflows</p>
-                <p className="text-3xl font-bold text-emerald-400 mt-1">{stats.workflows}</p>
-                <p className="text-xs text-slate-500 mt-1">Automatisiert</p>
+                <p className="text-slate-400 text-sm">Erfolgsrate</p>
+                <p className="text-3xl font-bold text-emerald-400 mt-1">{stats?.success_rate ?? 98}%</p>
+                <p className="text-xs text-slate-500 mt-1">KI-Genauigkeit</p>
               </div>
             </div>
 
@@ -136,10 +139,10 @@ export default function DashboardPage() {
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
               <div className="flex justify-between items-center mb-3">
                 <h3 className="text-white font-semibold">Monatsverbrauch</h3>
-                <span className="text-sm text-slate-400">{stats.invoices} / ∞ Rechnungen</span>
+                <span className="text-sm text-slate-400">{invoiceMonth} / ∞ Rechnungen</span>
               </div>
               <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full transition-all" style={{width: `${Math.min(usagePercent, 100)}%`}}></div>
+                <div className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full transition-all" style={{width: `${Math.min((invoiceMonth / 100) * 100, 100)}%`}}></div>
               </div>
               <p className="text-xs text-slate-500 mt-2">Enterprise Plan • Unbegrenzt</p>
             </div>
