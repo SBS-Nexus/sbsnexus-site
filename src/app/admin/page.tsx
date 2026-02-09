@@ -18,20 +18,21 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [newUser, setNewUser] = useState({ name: "", email: "", password: "", is_admin: false });
   const [creating, setCreating] = useState(false);
+  const [resetUserId, setResetUserId] = useState<number | null>(null);
+  const [newPassword, setNewPassword] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     const savedUser = localStorage.getItem("sbs_user");
     const token = localStorage.getItem("sbs_token");
     if (!savedUser || !token) { router.push("/login"); return; }
-    
     const userData = JSON.parse(savedUser);
     if (userData.role !== "admin") { router.push("/dashboard"); return; }
     setUser(userData);
-    
     fetchUsers(token);
   }, [router]);
 
@@ -62,9 +63,9 @@ export default function AdminPage() {
         setShowForm(false);
         setNewUser({ name: "", email: "", password: "", is_admin: false });
         fetchUsers(token || "");
-      } else {
-        setError(data.detail || "Fehler beim Erstellen");
-      }
+        setSuccess("User erstellt!");
+        setTimeout(() => setSuccess(""), 3000);
+      } else setError(data.detail || "Fehler");
     } catch { setError("Verbindungsfehler"); }
     setCreating(false);
   }
@@ -77,6 +78,27 @@ export default function AdminPage() {
       headers: { "Authorization": token || "" }
     });
     setUsers(users.filter(u => u.id !== userId));
+    setSuccess("User gelöscht!");
+    setTimeout(() => setSuccess(""), 3000);
+  }
+
+  async function resetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    const token = localStorage.getItem("sbs_token");
+    try {
+      const res = await fetch("https://app.sbsdeutschland.com/api/nexus/admin/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": token || "" },
+        body: JSON.stringify({ user_id: resetUserId, new_password: newPassword })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setResetUserId(null);
+        setNewPassword("");
+        setSuccess("Passwort geändert!");
+        setTimeout(() => setSuccess(""), 3000);
+      } else setError(data.detail || "Fehler");
+    } catch { setError("Verbindungsfehler"); }
   }
 
   if (!user) return null;
@@ -97,6 +119,7 @@ export default function AdminPage() {
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         {error && <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6">{error}</div>}
+        {success && <div className="bg-green-50 text-green-600 p-4 rounded-lg mb-6">{success}</div>}
         
         {showForm && (
           <div className="bg-white rounded-xl border p-6 mb-6">
@@ -105,16 +128,22 @@ export default function AdminPage() {
               <input type="text" placeholder="Name" value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})} className="px-4 py-2 border rounded-lg" required />
               <input type="email" placeholder="E-Mail" value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} className="px-4 py-2 border rounded-lg" required />
               <input type="password" placeholder="Passwort" value={newUser.password} onChange={e => setNewUser({...newUser, password: e.target.value})} className="px-4 py-2 border rounded-lg" required />
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={newUser.is_admin} onChange={e => setNewUser({...newUser, is_admin: e.target.checked})} />
-                Admin-Rechte
-              </label>
+              <label className="flex items-center gap-2"><input type="checkbox" checked={newUser.is_admin} onChange={e => setNewUser({...newUser, is_admin: e.target.checked})} /> Admin-Rechte</label>
               <div className="md:col-span-2 flex gap-2">
-                <button type="submit" disabled={creating} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50">
-                  {creating ? "Erstellen..." : "User erstellen"}
-                </button>
+                <button type="submit" disabled={creating} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50">{creating ? "Erstellen..." : "User erstellen"}</button>
                 <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 border rounded-lg hover:bg-gray-50">Abbrechen</button>
               </div>
+            </form>
+          </div>
+        )}
+
+        {resetUserId && (
+          <div className="bg-white rounded-xl border p-6 mb-6">
+            <h3 className="font-semibold mb-4">Passwort zurücksetzen für: {users.find(u => u.id === resetUserId)?.name}</h3>
+            <form onSubmit={resetPassword} className="flex gap-4">
+              <input type="password" placeholder="Neues Passwort" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="px-4 py-2 border rounded-lg flex-1" required minLength={6} />
+              <button type="submit" className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700">Speichern</button>
+              <button type="button" onClick={() => setResetUserId(null)} className="px-6 py-2 border rounded-lg hover:bg-gray-50">Abbrechen</button>
             </form>
           </div>
         )}
@@ -137,7 +166,7 @@ export default function AdminPage() {
                   <th className="px-4 py-3">Rolle</th>
                   <th className="px-4 py-3">Erstellt</th>
                   <th className="px-4 py-3">Letzter Login</th>
-                  <th className="px-4 py-3">Aktion</th>
+                  <th className="px-4 py-3">Aktionen</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -146,17 +175,12 @@ export default function AdminPage() {
                     <td className="px-4 py-3 text-sm">{u.id}</td>
                     <td className="px-4 py-3 font-medium">{u.name}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{u.email}</td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs ${u.is_admin ? "bg-purple-100 text-purple-700" : "bg-gray-100 text-gray-600"}`}>
-                        {u.is_admin ? "Admin" : "User"}
-                      </span>
-                    </td>
+                    <td className="px-4 py-3"><span className={`px-2 py-1 rounded-full text-xs ${u.is_admin ? "bg-purple-100 text-purple-700" : "bg-gray-100 text-gray-600"}`}>{u.is_admin ? "Admin" : "User"}</span></td>
                     <td className="px-4 py-3 text-sm text-gray-500">{u.created_at?.split(" ")[0]}</td>
                     <td className="px-4 py-3 text-sm text-gray-500">{u.last_login?.split("T")[0] || "-"}</td>
-                    <td className="px-4 py-3">
-                      {u.id !== user.id && (
-                        <button onClick={() => deleteUser(u.id)} className="text-red-600 hover:text-red-800 text-sm">Löschen</button>
-                      )}
+                    <td className="px-4 py-3 text-sm space-x-2">
+                      <button onClick={() => setResetUserId(u.id)} className="text-orange-600 hover:text-orange-800">Passwort</button>
+                      {u.id !== user.id && <button onClick={() => deleteUser(u.id)} className="text-red-600 hover:text-red-800">Löschen</button>}
                     </td>
                   </tr>
                 ))}
