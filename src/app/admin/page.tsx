@@ -18,6 +18,9 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [newUser, setNewUser] = useState({ name: "", email: "", password: "", is_admin: false });
+  const [creating, setCreating] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,6 +45,28 @@ export default function AdminPage() {
       else setError(data.detail || "Fehler");
     } catch { setError("Verbindungsfehler"); }
     setLoading(false);
+  }
+
+  async function createUser(e: React.FormEvent) {
+    e.preventDefault();
+    setCreating(true);
+    const token = localStorage.getItem("sbs_token");
+    try {
+      const res = await fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": token || "" },
+        body: JSON.stringify(newUser)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowForm(false);
+        setNewUser({ name: "", email: "", password: "", is_admin: false });
+        fetchUsers(token || "");
+      } else {
+        setError(data.detail || "Fehler beim Erstellen");
+      }
+    } catch { setError("Verbindungsfehler"); }
+    setCreating(false);
   }
 
   async function deleteUser(userId: number) {
@@ -73,9 +98,31 @@ export default function AdminPage() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {error && <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6">{error}</div>}
         
+        {showForm && (
+          <div className="bg-white rounded-xl border p-6 mb-6">
+            <h3 className="font-semibold mb-4">Neuen User erstellen</h3>
+            <form onSubmit={createUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input type="text" placeholder="Name" value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})} className="px-4 py-2 border rounded-lg" required />
+              <input type="email" placeholder="E-Mail" value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} className="px-4 py-2 border rounded-lg" required />
+              <input type="password" placeholder="Passwort" value={newUser.password} onChange={e => setNewUser({...newUser, password: e.target.value})} className="px-4 py-2 border rounded-lg" required />
+              <label className="flex items-center gap-2">
+                <input type="checkbox" checked={newUser.is_admin} onChange={e => setNewUser({...newUser, is_admin: e.target.checked})} />
+                Admin-Rechte
+              </label>
+              <div className="md:col-span-2 flex gap-2">
+                <button type="submit" disabled={creating} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50">
+                  {creating ? "Erstellen..." : "User erstellen"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 border rounded-lg hover:bg-gray-50">Abbrechen</button>
+              </div>
+            </form>
+          </div>
+        )}
+        
         <div className="bg-white rounded-xl border overflow-hidden">
           <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
             <h2 className="font-semibold">User ({users.length})</h2>
+            {!showForm && <button onClick={() => setShowForm(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">+ Neuer User</button>}
           </div>
           
           {loading ? (
@@ -108,9 +155,7 @@ export default function AdminPage() {
                     <td className="px-4 py-3 text-sm text-gray-500">{u.last_login?.split("T")[0] || "-"}</td>
                     <td className="px-4 py-3">
                       {u.id !== user.id && (
-                        <button onClick={() => deleteUser(u.id)} className="text-red-600 hover:text-red-800 text-sm">
-                          Löschen
-                        </button>
+                        <button onClick={() => deleteUser(u.id)} className="text-red-600 hover:text-red-800 text-sm">Löschen</button>
                       )}
                     </td>
                   </tr>
