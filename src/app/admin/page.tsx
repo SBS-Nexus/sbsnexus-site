@@ -49,6 +49,7 @@ export default function AdminPage() {
   const [createPassword, setCreatePassword] = useState("");
   const [createAdmin, setCreateAdmin] = useState(false);
   const [message, setMessage] = useState("");
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   const isAdmin = (u: CurrentUser | null): boolean => {
@@ -56,24 +57,35 @@ export default function AdminPage() {
     return u.is_admin === true || u.role === "admin";
   };
 
+  const authHeaders = () => ({
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  });
+
   useEffect(() => {
     const stored = localStorage.getItem("sbs_user");
-    if (!stored) { router.push("/login"); return; }
+    const storedToken = localStorage.getItem("sbs_token");
+    if (!stored || !storedToken) { router.push("/login"); return; }
     const userData: CurrentUser = JSON.parse(stored);
     if (!isAdmin(userData)) { router.push("/dashboard"); return; }
     setUser(userData);
-    loadData();
+    setToken(storedToken);
   }, [router]);
 
+  useEffect(() => {
+    if (token) loadData();
+  }, [token]);
+
   const loadData = async () => {
+    if (!token) return;
     setLoading(true);
     try {
       const [usersRes, statsRes] = await Promise.all([
-        fetch("https://app.sbsdeutschland.com/api/nexus/admin/users"),
-        fetch("https://app.sbsdeutschland.com/api/nexus/admin/stats")
+        fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", { headers: authHeaders() }),
+        fetch("https://app.sbsdeutschland.com/api/nexus/admin/stats", { headers: authHeaders() })
       ]);
-      setUsers(await usersRes.json());
-      setStats(await statsRes.json());
+      if (usersRes.ok) setUsers(await usersRes.json());
+      if (statsRes.ok) setStats(await statsRes.json());
     } catch {}
     setLoading(false);
   };
@@ -84,7 +96,7 @@ export default function AdminPage() {
     if (!editUser) return;
     await fetch(`https://app.sbsdeutschland.com/api/nexus/admin/users/${editUser.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders(),
       body: JSON.stringify({ name: editName, is_admin: editAdmin })
     });
     setEditUser(null);
@@ -94,7 +106,7 @@ export default function AdminPage() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("User wirklich löschen?")) return;
-    await fetch(`https://app.sbsdeutschland.com/api/nexus/admin/users/${id}`, { method: "DELETE" });
+    await fetch(`https://app.sbsdeutschland.com/api/nexus/admin/users/${id}`, { method: "DELETE", headers: authHeaders() });
     showMsg("User gelöscht");
     loadData();
   };
@@ -103,7 +115,7 @@ export default function AdminPage() {
     if (!resetUser || !newPassword) return;
     await fetch("https://app.sbsdeutschland.com/api/nexus/admin/reset-password", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders(),
       body: JSON.stringify({ user_id: resetUser.id, new_password: newPassword })
     });
     setResetUser(null);
@@ -114,7 +126,7 @@ export default function AdminPage() {
   const handleCreate = async () => {
     await fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders(),
       body: JSON.stringify({ name: createName, email: createEmail, password: createPassword, is_admin: createAdmin })
     });
     setShowCreate(false);
