@@ -60,7 +60,7 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium">{user.name}</p>
                   <p className="text-xs text-slate-400">{user.role === "admin" ? "Administrator" : "User"}</p>
                 </div>
-                <button onClick={handleLogout} className="bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg text-sm">Logout</button>
+                {user.role === "admin" && <a href="/admin" className="bg-purple-600 hover:bg-purple-500 px-3 py-2 rounded-lg text-sm">Admin</a>}<button onClick={handleLogout} className="bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg text-sm">Logout</button>
               </div>
             </div>
           </div>
