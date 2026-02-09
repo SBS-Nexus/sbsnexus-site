@@ -24,8 +24,16 @@ interface AdminStats {
   recent_users: { name: string; email: string; created_at: string }[];
 }
 
+interface CurrentUser {
+  id: number;
+  name: string;
+  email?: string;
+  is_admin?: boolean;
+  role?: string;
+}
+
 export default function AdminPage() {
-  const [user, setUser] = useState<{id: number; name: string; is_admin: boolean} | null>(null);
+  const [user, setUser] = useState<CurrentUser | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [activeTab, setActiveTab] = useState<"overview" | "users">("overview");
@@ -43,11 +51,16 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
+  const isAdmin = (u: CurrentUser | null): boolean => {
+    if (!u) return false;
+    return u.is_admin === true || u.role === "admin";
+  };
+
   useEffect(() => {
     const stored = localStorage.getItem("sbs_user");
     if (!stored) { router.push("/login"); return; }
-    const userData = JSON.parse(stored);
-    if (!(userData.is_admin || userData.role === "admin")) { router.push("/dashboard"); return; }
+    const userData: CurrentUser = JSON.parse(stored);
+    if (!isAdmin(userData)) { router.push("/dashboard"); return; }
     setUser(userData);
     loadData();
   }, [router]);
@@ -132,7 +145,6 @@ export default function AdminPage() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {message && <div className="mb-4 bg-emerald-500/20 text-emerald-400 px-4 py-3 rounded-lg">{message}</div>}
 
-        {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button onClick={() => setActiveTab("overview")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "overview" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>📊 Übersicht</button>
           <button onClick={() => setActiveTab("users")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "users" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>👥 User verwalten</button>
@@ -140,7 +152,6 @@ export default function AdminPage() {
 
         {activeTab === "overview" && stats && (
           <>
-            {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
               <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
                 <p className="text-slate-400 text-sm">Gesamt User</p>
@@ -169,7 +180,6 @@ export default function AdminPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Top Users */}
               <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
                 <h3 className="text-white font-semibold mb-4">🏆 Top User nach Rechnungen</h3>
                 <div className="space-y-3">
@@ -185,7 +195,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Recent Users */}
               <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
                 <h3 className="text-white font-semibold mb-4">🆕 Neue Registrierungen</h3>
                 <div className="space-y-3">
@@ -244,7 +253,6 @@ export default function AdminPage() {
           </>
         )}
 
-        {/* Edit Modal */}
         {editUser && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md">
@@ -261,7 +269,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Reset Password Modal */}
         {resetUser && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md">
@@ -276,7 +283,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Create Modal */}
         {showCreate && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md">
