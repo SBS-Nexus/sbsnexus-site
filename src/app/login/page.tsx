@@ -1,14 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("registered")) {
+      setSuccess("Registrierung erfolgreich! Sie können sich jetzt anmelden.");
+    }
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +53,7 @@ export default function LoginPage() {
         </div>
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Anmelden</h2>
+          {success && <div className="bg-green-50 text-green-600 px-4 py-3 rounded-lg mb-4 text-sm">{success}</div>}
           {error && <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">{error}</div>}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
@@ -58,6 +68,9 @@ export default function LoginPage() {
               {loading ? "Wird angemeldet..." : "Anmelden"}
             </button>
           </form>
+          <p className="mt-6 text-center text-sm text-gray-600">
+            Noch kein Konto? <Link href="/register" className="text-blue-600 hover:underline">Registrieren</Link>
+          </p>
         </div>
         <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH</p>
       </div>
