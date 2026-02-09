@@ -14,16 +14,13 @@ function LoginForm() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get("registered")) {
-      setSuccess("Registrierung erfolgreich! Sie können sich jetzt anmelden.");
-    }
+    if (searchParams.get("registered")) setSuccess("Registrierung erfolgreich! Sie können sich jetzt anmelden.");
   }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
     try {
       const res = await fetch("https://app.sbsdeutschland.com/api/nexus/auth/login", {
         method: "POST",
@@ -35,12 +32,8 @@ function LoginForm() {
         localStorage.setItem("sbs_token", data.token);
         localStorage.setItem("sbs_user", JSON.stringify(data.user));
         router.push("/dashboard");
-      } else {
-        setError(data.detail || "Login fehlgeschlagen");
-      }
-    } catch {
-      setError("Verbindungsfehler");
-    }
+      } else setError(data.detail || "Login fehlgeschlagen");
+    } catch { setError("Verbindungsfehler"); }
     setLoading(false);
   };
 
@@ -57,6 +50,9 @@ function LoginForm() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Passwort</label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="********" required />
+        </div>
+        <div className="text-right">
+          <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">Passwort vergessen?</Link>
         </div>
         <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50">
           {loading ? "Wird angemeldet..." : "Anmelden"}
