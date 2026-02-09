@@ -92,7 +92,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             {user.is_admin || user.role === "admin" && <Link href="/admin" className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700">Admin</Link>}
-            <span className="text-slate-300">{user.name}</span>
+            <span className="text-slate-300">{user.name}</span>{(user.is_admin || user.role === "admin") && <Link href="/admin" className="ml-3 px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700">Admin</Link>}
             <button onClick={handleLogout} className="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm hover:bg-slate-600">Logout</button>
           </div>
         </div>
