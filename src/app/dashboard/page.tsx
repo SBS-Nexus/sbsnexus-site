@@ -1,20 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState({
-    invoicesTotal: 0,
-    invoicesMonth: 0,
-    contractsTotal: 0,
-    videoDiagnoses: 0,
-    successRate: 0
-  });
+  const [user, setUser] = useState<{name: string, email: string, role: string} | null>(null);
+  const [stats, setStats] = useState({ invoicesTotal: 0, invoicesMonth: 0, contractsTotal: 0, videoDiagnoses: 0, successRate: 0 });
   const [loading, setLoading] = useState(true);
   const [apiStatus, setApiStatus] = useState("checking");
+  const router = useRouter();
 
   useEffect(() => {
+    const savedUser = localStorage.getItem("sbs_user");
+    if (!savedUser) {
+      router.push("/login");
+      return;
+    }
+    setUser(JSON.parse(savedUser));
+    
     async function fetchStats() {
       try {
         const res = await fetch("https://app.sbsdeutschland.com/api/nexus/stats");
@@ -27,13 +30,21 @@ export default function DashboardPage() {
           successRate: data.success_rate || 0
         });
         setApiStatus("online");
-      } catch (e) {
+      } catch {
         setApiStatus("offline");
       }
       setLoading(false);
     }
     fetchStats();
-  }, []);
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("sbs_token");
+    localStorage.removeItem("sbs_user");
+    router.push("/login");
+  };
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,12 +52,23 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Willkommen zurück, Luis! 👋</h1>
+              <h1 className="text-2xl font-bold">Willkommen zurück, {user.name}! 👋</h1>
               <p className="text-slate-300 mt-1">Ihre SBS Produkte auf einen Blick.</p>
             </div>
-            <span className={`px-3 py-1 rounded-full text-sm ${apiStatus === "online" ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}`}>
-              ● {apiStatus === "online" ? "Alle Systeme online" : "Verbindungsfehler"}
-            </span>
+            <div className="flex items-center gap-4">
+              <span className={`px-3 py-1 rounded-full text-sm ${apiStatus === "online" ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}`}>
+                ● {apiStatus === "online" ? "Systeme online" : "Offline"}
+              </span>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium">{user.name}</p>
+                  <p className="text-xs text-slate-400">{user.role === "admin" ? "Administrator" : "User"}</p>
+                </div>
+                <button onClick={handleLogout} className="bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg text-sm">
+                  Logout
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -83,7 +105,6 @@ export default function DashboardPage() {
             </div>
             <p className="text-xs text-gray-400 mt-1">{stats.invoicesTotal} / 200</p>
           </a>
-          
           <a href="https://contract.sbsdeutschland.com" className="bg-white rounded-xl border p-6 hover:shadow-lg hover:border-purple-300 transition-all">
             <span className="text-3xl">📝</span>
             <h3 className="font-semibold mt-2">Vertragsanalyse</h3>
@@ -93,7 +114,6 @@ export default function DashboardPage() {
             </div>
             <p className="text-xs text-gray-400 mt-1">{stats.contractsTotal} / 100</p>
           </a>
-          
           <a href="https://knowledge-sbsdeutschland.streamlit.app" className="bg-white rounded-xl border p-6 hover:shadow-lg hover:border-orange-300 transition-all">
             <span className="text-3xl">🔧</span>
             <h3 className="font-semibold mt-2">HydraulikDoc AI</h3>
@@ -103,7 +123,6 @@ export default function DashboardPage() {
             </div>
             <p className="text-xs text-gray-400 mt-1">{stats.videoDiagnoses} / 50</p>
           </a>
-          
           <a href="https://automation.sbsdeutschland.com" className="bg-white rounded-xl border p-6 hover:shadow-lg hover:border-slate-300 transition-all">
             <span className="text-3xl">⚡</span>
             <h3 className="font-semibold mt-2">Workflows</h3>
