@@ -94,6 +94,7 @@ export default function DashboardPage() {
             <span className="text-xl font-bold text-white">SBS Nexus</span>
           </div>
           <div className="flex items-center gap-3">
+            {user && token && <NotificationBell userId={user.id} token={token} />}
             {(user.is_admin || user.role === "admin") && <Link href="/admin" className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700">Admin</Link>}
             <span className="text-slate-300">{user.name}</span>
             <button onClick={handleLogout} className="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm hover:bg-slate-600">Logout</button>
