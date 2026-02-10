@@ -36,7 +36,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<AdminStats | null>(null);
-  const [activeTab, setActiveTab] = useState<"overview" | "users" | "broadcast">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "users" | "broadcast" | "audit">("overview");
   const [loading, setLoading] = useState(true);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [editName, setEditName] = useState("");
@@ -54,6 +54,7 @@ export default function AdminPage() {
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [broadcastType, setBroadcastType] = useState("info");
   const [broadcastLink, setBroadcastLink] = useState("");
+  const [auditLogs, setAuditLogs] = useState<{id: number; user_email: string; action: string; resource_type: string; details: string; created_at: string}[]>([]);
   const router = useRouter();
 
   const isAdmin = (u: CurrentUser | null): boolean => {
