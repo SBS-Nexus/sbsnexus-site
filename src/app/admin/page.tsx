@@ -304,6 +304,38 @@ export default function AdminPage() {
           </>
         )}
 
+        {activeTab === "webhooks" && (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-white">🔗 Webhooks</h2>
+              <button onClick={() => {
+                const name = prompt("Webhook Name:");
+                const url = prompt("Webhook URL (z.B. n8n):");
+                if (name && url) {
+                  fetch("https://app.sbsdeutschland.com/api/nexus/admin/webhooks", {
+                    method: "POST", headers: authHeaders(),
+                    body: JSON.stringify({ name, url, events: ["invoice.created"] })
+                  }).then(() => { loadWebhooks(); showMsg("Webhook erstellt"); });
+                }
+              }} className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">+ Neuer Webhook</button>
+            </div>
+            <p className="text-slate-400 mb-6">Webhooks senden Events an externe Systeme wie n8n, Zapier oder Slack.</p>
+            <div className="space-y-4">
+              {webhooks.length === 0 && <p className="text-slate-500">Keine Webhooks konfiguriert.</p>}
+              {webhooks.map((wh) => (
+                <div key={wh.id} className="bg-slate-800 border border-slate-700 rounded-xl p-4 flex justify-between items-center">
+                  <div>
+                    <p className="text-white font-medium">{wh.name}</p>
+                    <p className="text-slate-400 text-sm truncate max-w-md">{wh.url}</p>
+                    <div className="flex gap-2 mt-2">{wh.events.map((e) => <span key={e} className="text-xs bg-slate-600 text-slate-200 px-2 py-1 rounded">{e}</span>)}</div>
+                  </div>
+                  <button onClick={() => fetch(`https://app.sbsdeutschland.com/api/nexus/admin/webhooks/${wh.id}`, { method: "DELETE", headers: authHeaders() }).then(() => loadWebhooks())} className="text-red-400 hover:text-red-300">Löschen</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {activeTab === "audit" && (
           <div>
             <div className="flex justify-between items-center mb-4">
