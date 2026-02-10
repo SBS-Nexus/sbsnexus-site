@@ -89,11 +89,11 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <header className="bg-slate-800/50 border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <span className="text-2xl">🏢</span>
             <span className="text-xl font-bold text-white">SBS Nexus</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             {user && token && <NotificationBell userId={user.id} token={token} />}
             {(user.is_admin || user.role === "admin") && <Link href="/admin" className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700">Admin</Link>}
             <span className="text-slate-300">{user.name}</span>
