@@ -96,6 +96,14 @@ export default function AdminPage() {
     setLoading(false);
   };
 
+  const loadWebhooks = async () => {
+    if (!token) return;
+    try {
+      const res = await fetch("https://app.sbsdeutschland.com/api/nexus/admin/webhooks", { headers: authHeaders() });
+      if (res.ok) { const data = await res.json(); setWebhooks(data.webhooks || []); }
+    } catch {}
+  };
+
   const loadAuditLogs = async () => {
     if (!token) return;
     try {
@@ -189,6 +197,7 @@ export default function AdminPage() {
           <button onClick={() => setActiveTab("overview")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "overview" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>📊 Übersicht</button>
           <button onClick={() => setActiveTab("users")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "users" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>👥 User</button>
           <button onClick={() => setActiveTab("broadcast")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "broadcast" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>📢 Broadcast</button>
+          <button onClick={() => { setActiveTab("webhooks"); loadWebhooks(); }} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "webhooks" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>🔗 Webhooks</button>
           <button onClick={() => { setActiveTab("audit"); loadAuditLogs(); }} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "audit" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>📋 Audit Logs</button>
         </div>
 
