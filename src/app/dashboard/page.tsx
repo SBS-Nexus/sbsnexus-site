@@ -1,4 +1,5 @@
 "use client";
+import NotificationBell from "@/components/NotificationBell";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -32,6 +33,7 @@ interface MonthlyData {
 }
 
 export default function DashboardPage() {
+  const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<{id: number; name: string; email?: string; is_admin?: boolean; role?: string} | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -46,6 +48,7 @@ export default function DashboardPage() {
     
     const userData = JSON.parse(stored);
     setUser(userData);
+    setToken(localStorage.getItem("sbs_token"));
     
     fetch(`https://app.sbsdeutschland.com/api/nexus/stats/${userData.id}`)
       .then(res => res.json()).then(data => setStats(data)).catch(() => {});
