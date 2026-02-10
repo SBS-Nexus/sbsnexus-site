@@ -36,7 +36,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<AdminStats | null>(null);
-  const [activeTab, setActiveTab] = useState<"overview" | "users">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "users" | "broadcast">("overview");
   const [loading, setLoading] = useState(true);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [editName, setEditName] = useState("");
@@ -50,6 +50,10 @@ export default function AdminPage() {
   const [createAdmin, setCreateAdmin] = useState(false);
   const [message, setMessage] = useState("");
   const [token, setToken] = useState<string | null>(null);
+  const [broadcastTitle, setBroadcastTitle] = useState("");
+  const [broadcastMessage, setBroadcastMessage] = useState("");
+  const [broadcastType, setBroadcastType] = useState("info");
+  const [broadcastLink, setBroadcastLink] = useState("");
   const router = useRouter();
 
   const isAdmin = (u: CurrentUser | null): boolean => {
@@ -135,6 +139,20 @@ export default function AdminPage() {
     loadData();
   };
 
+  const handleBroadcast = async () => {
+    if (!broadcastTitle) return;
+    const res = await fetch("https://app.sbsdeutschland.com/api/nexus/notifications/admin/broadcast", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ type: broadcastType, title: broadcastTitle, message: broadcastMessage, link: broadcastLink || null })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      showMsg(`Nachricht an ${data.sent_to} User gesendet!`);
+      setBroadcastTitle(""); setBroadcastMessage(""); setBroadcastLink("");
+    }
+  };
+
   if (loading || !user) {
     return <div className="min-h-screen bg-slate-900 flex items-center justify-center"><p className="text-white">Laden...</p></div>;
   }
@@ -159,7 +177,8 @@ export default function AdminPage() {
 
         <div className="flex gap-2 mb-6">
           <button onClick={() => setActiveTab("overview")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "overview" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>📊 Übersicht</button>
-          <button onClick={() => setActiveTab("users")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "users" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>👥 User verwalten</button>
+          <button onClick={() => setActiveTab("users")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "users" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>👥 User</button>
+          <button onClick={() => setActiveTab("broadcast")} className={`px-4 py-2 rounded-lg font-medium ${activeTab === "broadcast" ? "bg-purple-600 text-white" : "bg-slate-700 text-slate-300"}`}>📢 Broadcast</button>
         </div>
 
         {activeTab === "overview" && stats && (
@@ -265,6 +284,40 @@ export default function AdminPage() {
           </>
         )}
 
+        {activeTab === "broadcast" && (
+          <div className="max-w-2xl">
+            <h2 className="text-xl font-bold text-white mb-4">📢 Broadcast Nachricht</h2>
+            <p className="text-slate-400 mb-6">Sende eine Nachricht an alle aktiven User.</p>
+            
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-4">
+              <div>
+                <label className="text-slate-400 text-sm">Typ</label>
+                <select value={broadcastType} onChange={(e) => setBroadcastType(e.target.value)} className="w-full mt-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                  <option value="info">ℹ️ Info</option>
+                  <option value="success">✅ Erfolg</option>
+                  <option value="warning">⚠️ Warnung</option>
+                  <option value="error">❌ Fehler</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-slate-400 text-sm">Titel *</label>
+                <input value={broadcastTitle} onChange={(e) => setBroadcastTitle(e.target.value)} placeholder="z.B. Neue Funktion verfügbar!" className="w-full mt-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" />
+              </div>
+              <div>
+                <label className="text-slate-400 text-sm">Nachricht (optional)</label>
+                <textarea value={broadcastMessage} onChange={(e) => setBroadcastMessage(e.target.value)} placeholder="Weitere Details..." rows={3} className="w-full mt-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" />
+              </div>
+              <div>
+                <label className="text-slate-400 text-sm">Link (optional)</label>
+                <input value={broadcastLink} onChange={(e) => setBroadcastLink(e.target.value)} placeholder="z.B. /dashboard" className="w-full mt-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" />
+              </div>
+              <button onClick={handleBroadcast} disabled={!broadcastTitle} className="w-full py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                📢 An alle User senden
+              </button>
+            </div>
+          </div>
+        )}
+
         {editUser && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md">
@@ -316,4 +369,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
