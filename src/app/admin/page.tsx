@@ -294,6 +294,39 @@ export default function AdminPage() {
           </>
         )}
 
+        {activeTab === "audit" && (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-white">📋 Audit Logs</h2>
+              <span className="text-slate-400 text-sm">{auditLogs.length} Einträge</span>
+            </div>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-slate-700">
+                  <tr>
+                    <th className="text-left px-4 py-3 text-slate-300 text-sm">Zeit</th>
+                    <th className="text-left px-4 py-3 text-slate-300 text-sm">User</th>
+                    <th className="text-left px-4 py-3 text-slate-300 text-sm">Aktion</th>
+                    <th className="text-left px-4 py-3 text-slate-300 text-sm">Ressource</th>
+                    <th className="text-left px-4 py-3 text-slate-300 text-sm">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {auditLogs.map((log) => (
+                    <tr key={log.id} className="border-t border-slate-700">
+                      <td className="px-4 py-3 text-slate-400 text-xs">{log.created_at}</td>
+                      <td className="px-4 py-3 text-slate-300 text-sm">{log.user_email}</td>
+                      <td className="px-4 py-3"><span className="text-xs px-2 py-1 bg-slate-600 text-slate-200 rounded">{log.action}</span></td>
+                      <td className="px-4 py-3 text-slate-400 text-sm">{log.resource_type || "-"}</td>
+                      <td className="px-4 py-3 text-slate-400 text-sm">{log.details || "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {activeTab === "broadcast" && (
           <div className="max-w-2xl">
             <h2 className="text-xl font-bold text-white mb-4">📢 Broadcast Nachricht</h2>
