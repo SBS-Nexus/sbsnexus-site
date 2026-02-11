@@ -118,6 +118,12 @@ export default function DashboardPage() {
           <a href="https://knowledge-sbsdeutschland.streamlit.app/" className="bg-gradient-to-br from-orange-500 to-orange-600 p-4 rounded-xl text-white hover:scale-105 transition-transform">
             <span className="text-2xl">🔧</span><p className="font-semibold mt-2">Video-Diagnose</p>
           </a>
+          <a href="/maintenance" className="bg-gradient-to-br from-amber-500 to-orange-500 p-4 rounded-xl text-white hover:scale-105 transition-transform">
+            <span className="text-2xl">🔧</span><p className="font-semibold mt-2">Wartungs-Alerts</p>
+          </a>
+          <a href="/maintenance" className="bg-gradient-to-br from-amber-500 to-orange-500 p-4 rounded-xl text-white hover:scale-105 transition-transform">
+            <span className="text-2xl">🔧</span><p className="font-semibold mt-2">Wartungs-Alerts</p>
+          </a>
           <a href="https://app.sbsdeutschland.com/copilot" className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-4 rounded-xl text-white hover:scale-105 transition-transform">
             <span className="text-2xl">🤖</span><p className="font-semibold mt-2">Finance Copilot</p>
           </a>
