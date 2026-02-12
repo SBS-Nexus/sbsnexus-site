@@ -178,7 +178,7 @@ function MaintenanceDetailContent() {
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
             <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider mb-3">Suchbegriffe für Beschaffung</h3>
             <div className="flex flex-wrap gap-2">
-              {[...new Set(part.search_terms)].map((term: string, i: number) => (
+              {[...new Set(part.search_terms as string[])].map((term: string, i: number) => (
                 <span key={i} className="bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1 rounded-full text-sm">{term}</span>
               ))}
             </div>
