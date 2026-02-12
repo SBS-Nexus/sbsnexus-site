@@ -129,7 +129,7 @@ export default function MaintenancePage() {
             </div>
           ) : (
             filteredRequests.map((req) => (
-              <div key={req.request_id} className="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:border-slate-600">
+              <Link href={`/maintenance/detail?id=${req.request_id}`} key={req.request_id} className="block bg-slate-800 border border-slate-700 rounded-xl p-5 hover:border-amber-500/50 hover:bg-slate-800/80 transition-all cursor-pointer">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -149,7 +149,7 @@ export default function MaintenancePage() {
                     <p className="text-amber-400 text-sm mt-1">{req.recommendation === "reorder" ? "📦 Nachbestellen" : "🔍 Neuer Lieferant"}</p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </div>
