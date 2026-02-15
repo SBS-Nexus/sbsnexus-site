@@ -2,80 +2,51 @@
 
 import Link from 'next/link';
 
-export default function BlogPage() {
-  const featuredPost = {
-    slug: 'warum-datev-automatisierung-2026',
+const categories = [
+  { name: 'Alle', count: 3 },
+  { name: 'Finance Intelligence', count: 2 },
+  { name: 'Vergleich', count: 1 },
+];
+
+const featuredPost = {
+  title: 'E-Rechnung Pflicht 2025: Was Unternehmen jetzt tun müssen',
+  excerpt: 'Seit dem 1. Januar 2025 gilt die E-Rechnungspflicht für alle B2B-Transaktionen. Dieser Leitfaden zeigt Fristen, Formate und wie KI-Automatisierung 85% Zeitersparnis bringt.',
+  slug: 'e-rechnung-pflicht-2025-was-unternehmen-jetzt-tun-muessen',
+  category: 'Finance Intelligence',
+  author: 'Luis Schenk',
+  date: '15. Feb 2026',
+  readTime: '12 Min',
+};
+
+const posts = [
+  {
+    title: 'KI-Rechnungsverarbeitung im Mittelstand: SAP Concur vs. Basware vs. SBS Nexus',
+    excerpt: 'Der komplette Vergleich der drei relevantesten Plattformen — mit Fokus auf DATEV-Integration, Kosten und Implementierungsdauer.',
+    slug: 'ki-rechnungsverarbeitung-mittelstand-vergleich',
+    category: 'Vergleich',
+    date: '15. Feb 2026',
+    readTime: '15 Min',
+  },
+  {
     title: 'Warum DATEV-Automatisierung 2026 kein Luxus mehr ist',
     excerpt: 'Der deutsche Mittelstand verarbeitet Millionen Rechnungen pro Jahr manuell. Mit KI-gestützter Automatisierung lässt sich die Buchhaltungszeit um 70% reduzieren.',
+    slug: 'warum-datev-automatisierung-2026',
     category: 'Finance Intelligence',
+    date: '28. Jan 2026',
     readTime: '8 Min',
-    date: '28. Januar 2026',
-    author: 'Luis Schenk',
-  };
+  },
+];
 
-  const posts = [
-    {
-      slug: 'hydraulikdoc-vs-chatgpt-technische-dokumentation',
-      title: 'HydraulikDoc vs. ChatGPT: Warum generische KI bei technischen Handbüchern scheitert',
-      excerpt: 'Ein 80-seitiges Bosch Rexroth Datenblatt stellt ChatGPT vor unlösbare Probleme. Wir erklären, warum domänenspezifische KI der Schlüssel ist.',
-      category: 'Technical Intelligence',
-      readTime: '6 Min',
-      date: '25. Januar 2026',
-    },
-    {
-      slug: 'sap-s4hana-ki-integration',
-      title: 'SAP S/4HANA + KI: Die AI-Schicht, die SAP Build nicht bietet',
-      excerpt: 'SAP Build ist generisch. SBS Nexus ist vertikal. Wir zeigen, wie beide zusammenarbeiten können.',
-      category: 'Integrationen',
-      readTime: '7 Min',
-      date: '22. Januar 2026',
-    },
-    {
-      slug: 'vertragsmanagement-mittelstand-risiken',
-      title: '5 Vertragsrisiken, die jeder Mittelständler übersieht',
-      excerpt: 'Automatische Verlängerungen, versteckte Haftungsklauseln, vergessene Kündigungsfristen – und wie KI sie findet.',
-      category: 'Contract Intelligence',
-      readTime: '5 Min',
-      date: '18. Januar 2026',
-    },
-    {
-      slug: 'dsgvo-ki-dokumentenverarbeitung',
-      title: 'DSGVO + KI: So verarbeiten Sie Dokumente rechtssicher',
-      excerpt: 'Amerikanische Cloud-Dienste vs. deutsche Rechenzentren – was Sie bei KI-Dokumentenverarbeitung beachten müssen.',
-      category: 'Compliance',
-      readTime: '6 Min',
-      date: '15. Januar 2026',
-    },
-    {
-      slug: 'n8n-vs-zapier-mittelstand',
-      title: 'n8n vs. Zapier: Welche Automatisierung passt zum Mittelstand?',
-      excerpt: 'Self-hosted vs. Cloud, Kosten pro Task vs. Flatrate – ein ehrlicher Vergleich für deutsche Unternehmen.',
-      category: 'Automation',
-      readTime: '8 Min',
-      date: '12. Januar 2026',
-    },
-    {
-      slug: 'rechnungsverarbeitung-benchmark-2026',
-      title: 'Benchmark: Wie schnell verarbeitet Ihre Buchhaltung Rechnungen?',
-      excerpt: 'Wir haben 50 Mittelständler befragt. Das Ergebnis: 4,2 Minuten pro Rechnung im Durchschnitt. Es geht auch in 12 Sekunden.',
-      category: 'Finance Intelligence',
-      readTime: '4 Min',
-      date: '8. Januar 2026',
-    },
-  ];
-
-  const categories = [
-    { name: 'Alle', count: 7 },
-    { name: 'Finance Intelligence', count: 2 },
-    { name: 'Technical Intelligence', count: 1 },
-    { name: 'Contract Intelligence', count: 1 },
-    { name: 'Integrationen', count: 1 },
-    { name: 'Compliance', count: 1 },
-    { name: 'Automation', count: 1 },
-  ];
-
+export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      {/* SEO Meta */}
+      <head>
+        <title>Blog | SBS Nexus – KI-Automatisierung für den deutschen Mittelstand</title>
+        <meta name="description" content="Praxis-Wissen zu KI-Automatisierung, DATEV-Integration, E-Rechnung und Enterprise-Software für den deutschen Mittelstand. Von SBS Deutschland." />
+        <link rel="canonical" href="https://www.sbsnexus.de/blog" />
+      </head>
+
       {/* Header */}
       <header className="border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -85,7 +56,7 @@ export default function BlogPage() {
             </div>
             <span className="text-white font-semibold">SBS Nexus</span>
           </Link>
-          <nav className="flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6">
             <Link href="/#modules" className="text-slate-400 hover:text-white text-sm">Module</Link>
             <Link href="/pricing" className="text-slate-400 hover:text-white text-sm">Pricing</Link>
             <Link href="/blog" className="text-white text-sm font-medium">Blog</Link>
@@ -101,13 +72,14 @@ export default function BlogPage() {
       </header>
 
       {/* Hero */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Blog
+      <section className="py-16 px-6 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            SBS Nexus Blog
           </h1>
           <p className="text-xl text-slate-400">
-            Insights zu KI-Automatisierung, DATEV-Integration und Prozessoptimierung für den deutschen Mittelstand.
+            Praxis-Wissen zu KI-Automatisierung, DATEV-Workflows und Enterprise-Software 
+            für den deutschen Mittelstand.
           </p>
         </div>
       </section>
@@ -154,9 +126,9 @@ export default function BlogPage() {
               </p>
               <div className="flex items-center gap-4 text-sm text-slate-400">
                 <span>{featuredPost.author}</span>
-                <span>•</span>
+                <span>·</span>
                 <span>{featuredPost.date}</span>
-                <span>•</span>
+                <span>·</span>
                 <span>{featuredPost.readTime} Lesezeit</span>
               </div>
             </div>
@@ -167,7 +139,7 @@ export default function BlogPage() {
       {/* Post Grid */}
       <section className="px-6 pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
             {posts.map((post, idx) => (
               <Link key={idx} href={`/blog/${post.slug}`}>
                 <article className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50 hover:border-slate-600 transition h-full flex flex-col">
