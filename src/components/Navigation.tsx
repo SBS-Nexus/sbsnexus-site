@@ -11,6 +11,7 @@ export default function Navigation() {
     { href: '/pricing', label: 'Pricing' },
     { href: '/integrations', label: 'Integrationen' },
     { href: '/blog', label: 'Blog' },
+    { href: '/partner', label: 'Partner', highlight: true },
     { href: '/about', label: 'Über uns' },
   ];
 
