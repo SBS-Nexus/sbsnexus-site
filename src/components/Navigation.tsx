@@ -13,6 +13,7 @@ export default function Navigation() {
     { href: '/blog', label: 'Blog' },
     { href: '/partner', label: 'Partner', highlight: true },
     { href: '/about', label: 'Über uns' },
+    { href: 'https://gtm.sbsnexus.de', label: 'GTM Hub' },
   ];
 
   return (
