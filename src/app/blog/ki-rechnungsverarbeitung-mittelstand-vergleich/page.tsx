@@ -455,7 +455,7 @@ export default function BlogPostKIVergleich() {
       <footer className="border-t border-slate-800/50 py-8 px-6 mt-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">
-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
+            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
           </p>
           <div className="flex gap-6">
             <Link href="/blog" className="text-white text-sm">Blog</Link>

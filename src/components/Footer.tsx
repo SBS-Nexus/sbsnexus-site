@@ -49,7 +49,7 @@ export default function Footer() {
               <li>In der Dell 19</li>
               <li>69469 Weinheim</li>
               <li className="pt-2">
-                <a href="tel:+4962012469" className="hover:text-white transition">+49 (0) 6201 24469</a>
+                <a href="tel:+49620124469" className="hover:text-white transition">+49 (0) 6201 24469</a>
               </li>
               <li>
                 <a href="mailto:info@sbsdeutschland.com" className="hover:text-white transition">info@sbsdeutschland.com</a>

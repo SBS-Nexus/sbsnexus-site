@@ -253,7 +253,7 @@ export default function DashboardPage() {
 
       <footer className="mt-12 py-6 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-sm text-slate-500">
-          <p>© 2026 SBS Deutschland GmbH</p>
+          <p>© 2026 SBS Deutschland GmbH & Co. KG</p>
           <div className="flex gap-4">
             <a href="https://sbsdeutschland.com/sbshomepage/impressum.html" className="hover:text-slate-300">Impressum</a>
             <a href="https://sbsdeutschland.com/sbshomepage/datenschutz.html" className="hover:text-slate-300">Datenschutz</a>

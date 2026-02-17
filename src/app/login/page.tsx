@@ -76,7 +76,7 @@ export default function LoginPage() {
         <Suspense fallback={<div className="bg-white rounded-2xl shadow-xl p-8 text-center">Laden...</div>}>
           <LoginForm />
         </Suspense>
-        <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH</p>
+        <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH & Co. KG</p>
       </div>
     </div>
   );

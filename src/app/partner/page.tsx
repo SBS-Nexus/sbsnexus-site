@@ -859,7 +859,7 @@ export default function PartnerPage() {
               </svg>
               partner@sbsdeutschland.com
             </a>
-            <a href="tel:+4962012446" style={{
+            <a href="tel:+49620124469" style={{
               display: 'inline-flex', alignItems: 'center', gap: '10px',
               background: 'rgba(255,255,255,0.1)', color: '#fff',
               padding: '18px 36px', borderRadius: '12px',

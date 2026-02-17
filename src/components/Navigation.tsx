@@ -13,7 +13,6 @@ export default function Navigation() {
     { href: '/blog', label: 'Blog' },
     { href: '/partner', label: 'Partner', highlight: true },
     { href: '/about', label: 'Über uns' },
-    { href: 'https://gtm.sbsnexus.de', label: 'GTM Hub' },
   ];
 
   return (
@@ -33,7 +32,10 @@ export default function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-slate-400 hover:text-white text-sm transition"
+              className={link.highlight 
+                ? "text-orange-400 hover:text-orange-300 text-sm font-medium transition"
+                : "text-slate-400 hover:text-white text-sm transition"
+              }
             >
               {link.label}
             </Link>

@@ -1,0 +1,180 @@
+diff --git a/src/app/blog/e-rechnung-pflicht-2025-was-unternehmen-jetzt-tun-muessen/page.tsx b/src/app/blog/e-rechnung-pflicht-2025-was-unternehmen-jetzt-tun-muessen/page.tsx
+index f79d74f..8cea5d7 100644
+--- a/src/app/blog/e-rechnung-pflicht-2025-was-unternehmen-jetzt-tun-muessen/page.tsx
++++ b/src/app/blog/e-rechnung-pflicht-2025-was-unternehmen-jetzt-tun-muessen/page.tsx
+@@ -433,7 +433,7 @@ export default function BlogPostERechnung() {
+       <footer className="border-t border-slate-800/50 py-8 px-6 mt-12">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+           <p className="text-slate-500 text-sm">
+-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
++            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
+           </p>
+           <div className="flex gap-6">
+             <Link href="/blog" className="text-white text-sm">Blog</Link>
+diff --git a/src/app/blog/ki-rechnungsverarbeitung-mittelstand-vergleich/page.tsx b/src/app/blog/ki-rechnungsverarbeitung-mittelstand-vergleich/page.tsx
+index d8d94c5..9614e25 100644
+--- a/src/app/blog/ki-rechnungsverarbeitung-mittelstand-vergleich/page.tsx
++++ b/src/app/blog/ki-rechnungsverarbeitung-mittelstand-vergleich/page.tsx
+@@ -455,7 +455,7 @@ export default function BlogPostKIVergleich() {
+       <footer className="border-t border-slate-800/50 py-8 px-6 mt-12">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+           <p className="text-slate-500 text-sm">
+-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
++            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
+           </p>
+           <div className="flex gap-6">
+             <Link href="/blog" className="text-white text-sm">Blog</Link>
+diff --git a/src/app/blog/page.tsx b/src/app/blog/page.tsx
+index 9a39146..cb9c2da 100644
+--- a/src/app/blog/page.tsx
++++ b/src/app/blog/page.tsx
+@@ -199,7 +199,7 @@ export default function BlogPage() {
+       <footer className="border-t border-slate-800/50 py-8 px-6">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+           <p className="text-slate-500 text-sm">
+-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
++            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
+           </p>
+           <div className="flex gap-6">
+             <Link href="/blog" className="text-white text-sm">Blog</Link>
+diff --git a/src/app/blog/warum-datev-automatisierung-2026/page.tsx b/src/app/blog/warum-datev-automatisierung-2026/page.tsx
+index b5c4823..14844c6 100644
+--- a/src/app/blog/warum-datev-automatisierung-2026/page.tsx
++++ b/src/app/blog/warum-datev-automatisierung-2026/page.tsx
+@@ -249,7 +249,7 @@ export default function BlogPostDATEV() {
+       <footer className="border-t border-slate-800/50 py-8 px-6 mt-12">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+           <p className="text-slate-500 text-sm">
+-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
++            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
+           </p>
+           <div className="flex gap-6">
+             <Link href="/blog" className="text-white text-sm">Blog</Link>
+diff --git a/src/app/dashboard/page.tsx b/src/app/dashboard/page.tsx
+index 1ef5318..35befdb 100644
+--- a/src/app/dashboard/page.tsx
++++ b/src/app/dashboard/page.tsx
+@@ -253,7 +253,7 @@ export default function DashboardPage() {
+ 
+       <footer className="mt-12 py-6 border-t border-slate-800">
+         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-sm text-slate-500">
+-          <p>© 2026 SBS Deutschland GmbH</p>
++          <p>© 2026 SBS Deutschland GmbH & Co. KG</p>
+           <div className="flex gap-4">
+             <a href="https://sbsdeutschland.com/sbshomepage/impressum.html" className="hover:text-slate-300">Impressum</a>
+             <a href="https://sbsdeutschland.com/sbshomepage/datenschutz.html" className="hover:text-slate-300">Datenschutz</a>
+diff --git a/src/app/integrations/page.tsx b/src/app/integrations/page.tsx
+index e1a018e..1b98dff 100644
+--- a/src/app/integrations/page.tsx
++++ b/src/app/integrations/page.tsx
+@@ -366,7 +366,7 @@ export default function IntegrationsPage() {
+       <footer className="border-t border-slate-800/50 py-8 px-6">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+           <p className="text-slate-500 text-sm">
+-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
++            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
+           </p>
+           <div className="flex gap-6">
+             <Link href="/security" className="text-slate-500 hover:text-white text-sm">Security</Link>
+diff --git a/src/app/login/page.tsx b/src/app/login/page.tsx
+index 9dc7040..4d9d967 100644
+--- a/src/app/login/page.tsx
++++ b/src/app/login/page.tsx
+@@ -76,7 +76,7 @@ export default function LoginPage() {
+         <Suspense fallback={<div className="bg-white rounded-2xl shadow-xl p-8 text-center">Laden...</div>}>
+           <LoginForm />
+         </Suspense>
+-        <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH</p>
++        <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH & Co. KG</p>
+       </div>
+     </div>
+   );
+diff --git a/src/app/partner/page.tsx b/src/app/partner/page.tsx
+index 1162d42..870d791 100644
+--- a/src/app/partner/page.tsx
++++ b/src/app/partner/page.tsx
+@@ -859,7 +859,7 @@ export default function PartnerPage() {
+               </svg>
+               partner@sbsdeutschland.com
+             </a>
+-            <a href="tel:+4962012446" style={{
++            <a href="tel:+49620124469" style={{
+               display: 'inline-flex', alignItems: 'center', gap: '10px',
+               background: 'rgba(255,255,255,0.1)', color: '#fff',
+               padding: '18px 36px', borderRadius: '12px',
+diff --git a/src/app/pricing/page.tsx b/src/app/pricing/page.tsx
+index 578c3d8..f10ed8e 100644
+--- a/src/app/pricing/page.tsx
++++ b/src/app/pricing/page.tsx
+@@ -286,7 +286,7 @@ export default function PricingPage() {
+       <footer className="border-t border-slate-800/50 py-8 px-6">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+           <p className="text-slate-500 text-sm">
+-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
++            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
+           </p>
+           <div className="flex gap-6">
+             <Link href="/security" className="text-slate-500 hover:text-white text-sm">Security</Link>
+diff --git a/src/app/register/page.tsx b/src/app/register/page.tsx
+index c91c646..269046d 100644
+--- a/src/app/register/page.tsx
++++ b/src/app/register/page.tsx
+@@ -100,7 +100,7 @@ export default function RegisterPage() {
+           )}
+         </div>
+         
+-        <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH</p>
++        <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH & Co. KG</p>
+       </div>
+     </div>
+   );
+diff --git a/src/app/security/page.tsx b/src/app/security/page.tsx
+index b33433a..1ab2f99 100644
+--- a/src/app/security/page.tsx
++++ b/src/app/security/page.tsx
+@@ -333,7 +333,7 @@ export default function SecurityPage() {
+       <footer className="border-t border-slate-800/50 py-8 px-6">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+           <p className="text-slate-500 text-sm">
+-            © 2026 SBS Deutschland GmbH · Weinheim · Alle Rechte vorbehalten.
++            © 2026 SBS Deutschland GmbH & Co. KG · Weinheim · Alle Rechte vorbehalten.
+           </p>
+           <div className="flex gap-6">
+             <Link href="/security" className="text-white text-sm">Security</Link>
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 2f0ca6b..a8597c2 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -49,7 +49,7 @@ export default function Footer() {
+               <li>In der Dell 19</li>
+               <li>69469 Weinheim</li>
+               <li className="pt-2">
+-                <a href="tel:+4962012469" className="hover:text-white transition">+49 (0) 6201 24469</a>
++                <a href="tel:+49620124469" className="hover:text-white transition">+49 (0) 6201 24469</a>
+               </li>
+               <li>
+                 <a href="mailto:info@sbsdeutschland.com" className="hover:text-white transition">info@sbsdeutschland.com</a>
+diff --git a/src/components/Navigation.tsx b/src/components/Navigation.tsx
+index 9f84747..b022be2 100644
+--- a/src/components/Navigation.tsx
++++ b/src/components/Navigation.tsx
+@@ -13,7 +13,6 @@ export default function Navigation() {
+     { href: '/blog', label: 'Blog' },
+     { href: '/partner', label: 'Partner', highlight: true },
+     { href: '/about', label: 'Über uns' },
+-    { href: 'https://gtm.sbsnexus.de', label: 'GTM Hub' },
+   ];
+ 
+   return (
+@@ -33,7 +32,10 @@ export default function Navigation() {
+             <Link
+               key={link.href}
+               href={link.href}
+-              className="text-slate-400 hover:text-white text-sm transition"
++              className={link.highlight 
++                ? "text-orange-400 hover:text-orange-300 text-sm font-medium transition"
++                : "text-slate-400 hover:text-white text-sm transition"
++              }
+             >
+               {link.label}
+             </Link>
