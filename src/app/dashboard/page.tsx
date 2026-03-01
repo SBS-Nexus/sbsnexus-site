@@ -109,7 +109,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <a href="https://app.sbsdeutschland.com/upload" className="bg-gradient-to-br from-cyan-500 to-cyan-600 p-4 rounded-xl text-white hover:scale-105 transition-transform">
+          <Link href="/dashboard/rechnungen" className="bg-gradient-to-br from-cyan-500 to-cyan-600 p-4 rounded-xl text-white hover:scale-105 transition-transform">
             <span className="text-2xl">📄</span><p className="font-semibold mt-2">Rechnung hochladen</p>
           </a>
           <a href="https://contract.sbsdeutschland.com/" className="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-xl text-white hover:scale-105 transition-transform">
