@@ -27,6 +27,7 @@ export default function HomePage() {
             <a href="#preise" className="text-sm text-slate-400 hover:text-white transition">Preise</a>
             <a href="https://sbsdeutschland.com/sbshomepage/" className="text-sm text-slate-400 hover:text-white transition">Unternehmen</a>
             <a href="https://sbsdeutschland.com/sbshomepage/kontakt.html" className="text-sm text-slate-400 hover:text-white transition">Kontakt</a>
+          </nav>
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
               <Link href="/dashboard" className="bg-amber-500 hover:bg-amber-400 text-slate-900 px-5 py-2.5 rounded-lg text-sm font-semibold transition">
@@ -54,6 +55,7 @@ export default function HomePage() {
             <a href="https://sbsdeutschland.com/sbshomepage/" className="block text-slate-300 hover:text-white">Unternehmen</a>
             <a href="https://sbsdeutschland.com/sbshomepage/kontakt.html" className="block text-slate-300 hover:text-white">Kontakt</a>
             {!isLoggedIn && <Link href="/login" onClick={() => setMobileMenu(false)} className="block text-slate-300 hover:text-white">Anmelden</Link>}
+          </div>
         )}
       </header>
 
