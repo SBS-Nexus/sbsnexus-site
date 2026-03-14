@@ -1,82 +1,94 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
 
-function LoginForm() {
+const API = "https://app.sbsdeutschland.com/api/erechnung";
+
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    if (searchParams.get("registered")) setSuccess("Registrierung erfolgreich! Sie können sich jetzt anmelden.");
-  }, [searchParams]);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setLoading(true);
+
     try {
-      const res = await fetch("https://app.sbsdeutschland.com/api/nexus/auth/login", {
+      const res = await fetch(API + "/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.detail || "Login fehlgeschlagen");
+      }
+
       const data = await res.json();
-      if (data.success) {
-        localStorage.setItem("sbs_token", data.token);
-        localStorage.setItem("sbs_user", JSON.stringify(data.user));
-        router.push("/dashboard");
-      } else setError(data.detail || "Login fehlgeschlagen");
-    } catch { setError("Verbindungsfehler"); }
-    setLoading(false);
+      localStorage.setItem("sbs_token", data.tokens.access_token);
+      localStorage.setItem("sbs_refresh", data.tokens.refresh_token);
+      localStorage.setItem("sbs_user", JSON.stringify(data.user));
+      window.location.href = "/dashboard";
+    } catch (err: any) {
+      setError(err.message || "Verbindungsfehler");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Anmelden</h2>
-      {success && <div className="bg-green-50 text-green-600 px-4 py-3 rounded-lg mb-4 text-sm">{success}</div>}
-      {error && <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">{error}</div>}
-      <form onSubmit={handleLogin} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="ihre@email.de" required />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Passwort</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="********" required />
-        </div>
-        <div className="text-right">
-          <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">Passwort vergessen?</Link>
-        </div>
-        <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50">
-          {loading ? "Wird angemeldet..." : "Anmelden"}
-        </button>
-      </form>
-      <p className="mt-6 text-center text-sm text-gray-600">
-        Noch kein Konto? <Link href="/register" className="text-blue-600 hover:underline">Registrieren</Link>
-      </p>
-    </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">🏢 SBS Nexus</h1>
-          <p className="text-slate-400 mt-2">Enterprise AI Platform</p>
+          <Link href="/" className="inline-flex items-center gap-2 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center font-bold text-slate-900 text-sm">SN</div>
+            <span className="text-2xl font-bold text-white">SBS Nexus</span>
+          </Link>
+          <h1 className="text-2xl font-bold text-white">Willkommen zur\u00fcck</h1>
+          <p className="text-slate-400 mt-2 text-sm">Melden Sie sich bei Ihrem Konto an</p>
         </div>
-        <Suspense fallback={<div className="bg-white rounded-2xl shadow-xl p-8 text-center">Laden...</div>}>
-          <LoginForm />
-        </Suspense>
-        <p className="mt-8 text-center text-sm text-slate-500">© 2026 SBS Deutschland GmbH & Co. KG</p>
+
+        <form onSubmit={handleLogin} className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 sm:p-8 space-y-5">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-sm text-red-400">
+              {error}
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">E-Mail</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+              placeholder="name@unternehmen.de"
+              className="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Passwort</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
+              placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+              className="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" />
+          </div>
+
+          <button type="submit" disabled={loading}
+            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold py-3 rounded-xl hover:from-amber-400 hover:to-amber-500 transition disabled:opacity-50 text-sm">
+            {loading ? "Wird angemeldet..." : "Anmelden"}
+          </button>
+
+          <div className="text-center space-y-2">
+            <a href="/forgot-password" className="text-sm text-slate-400 hover:text-amber-400 transition">Passwort vergessen?</a>
+            <p className="text-sm text-slate-500">
+              Noch kein Konto? <Link href="/register" className="text-amber-400 hover:text-amber-300 font-medium transition">Registrieren</Link>
+            </p>
+          </div>
+        </form>
+
+        <p className="text-center text-xs text-slate-600 mt-6">
+          SBS Deutschland GmbH & Co. KG \u00b7 Enterprise KI-L\u00f6sungen
+        </p>
       </div>
     </div>
   );
