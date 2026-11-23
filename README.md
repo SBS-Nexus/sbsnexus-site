@@ -29,3 +29,9 @@ For changes to the current marketing site, first establish its verified deployme
 - Retain historical evidence; coordinate cleanup of personal data or exposed credentials through an incident-response process.
 
 **Legal entity:** SBS Deutschland GmbH & Co. KG · [Official website](https://sbsdeutschland.com/) · [Official LinkedIn](https://www.linkedin.com/company/sbs-deutschland-gmbh-co-kg/)
+
+## Mail credential configuration
+
+Legacy Resend integrations read `RESEND_API_KEY` from the runtime environment. Missing or blank configuration stops the outbound request. Configure credentials in the hosting secret store; never commit them to source. Previewing content does not require a mail credential.
+
+Run the offline credential regression with `python -m unittest discover -s tests -p test_resend_configuration.py -v`. HTTP and database interactions are mocked and all fixtures are synthetic.
