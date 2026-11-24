@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { maintenanceAuthorization } from "@/lib/maintenanceAuth";
 import { Suspense } from "react";
 import type { MaintenanceDetail } from "@/lib/maintenanceTypes";
 
@@ -18,9 +19,11 @@ function MaintenanceDetailContent() {
     if (!stored) { router.push("/login"); return; }
     if (!requestId) return;
 
-    const API_KEY = "sbs_nexus_secret_2026";
+    let authorization: string;
+    try { authorization = maintenanceAuthorization(); }
+    catch { router.replace("/login"); return; }
     fetch(`https://app.sbsdeutschland.com/api/nexus/maintenance/requests/${requestId}`, {
-      headers: { "Authorization": API_KEY }
+      headers: { "Authorization": authorization }
     })
       .then(res => {
         if (!res.ok) throw new Error("Request nicht gefunden");

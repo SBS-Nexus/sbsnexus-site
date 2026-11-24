@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import type { Recommendation } from "@/lib/maintenanceTypes";
 import Link from "next/link";
+import { maintenanceAuthorization } from "@/lib/maintenanceAuth";
 
 export default function NewMaintenancePage() {
   const [image, setImage] = useState<string | null>(null);
@@ -48,7 +49,7 @@ export default function NewMaintenancePage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "sbs_nexus_secret_2026",
+          "Authorization": maintenanceAuthorization(),
         },
         body: JSON.stringify({
           image_base64: image,

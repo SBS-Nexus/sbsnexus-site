@@ -66,6 +66,8 @@ export default function AdminPage() {
     return u.is_admin === true || u.role === "admin";
   };
 
+  const hasAdminSession = Boolean(token && isAdmin(user));
+
   const authHeaders = useCallback(() => ({
     "Content-Type": "application/json",
     "Authorization": `Bearer ${token}`
@@ -82,6 +84,7 @@ export default function AdminPage() {
   }, [router]);
 
   const fetchData = useCallback(async () => {
+    if (!hasAdminSession) return {};
     const [usersRes, statsRes] = await Promise.all([
       fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", { headers: authHeaders() }),
       fetch("https://app.sbsdeutschland.com/api/nexus/admin/stats", { headers: authHeaders() })
@@ -90,7 +93,7 @@ export default function AdminPage() {
       users: usersRes.ok ? await usersRes.json() : undefined,
       stats: statsRes.ok ? await statsRes.json() : undefined,
     };
-  }, [authHeaders]);
+  }, [authHeaders, hasAdminSession]);
 
   const applyData = useCallback((data: { users?: User[] | { users: User[] }; stats?: AdminStats }) => {
     if (data.users) setUsers(Array.isArray(data.users) ? data.users : data.users.users);
@@ -100,12 +103,12 @@ export default function AdminPage() {
   const loadData = () => fetchData().then(applyData).catch(() => {}).finally(() => setLoading(false));
 
   useEffect(() => {
-    if (!token) return;
+    if (!hasAdminSession) return;
     let active = true;
     void fetchData().then(data => { if (active) applyData(data); })
       .catch(() => {}).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [token, fetchData, applyData]);
+  }, [hasAdminSession, fetchData, applyData]);
 
   const loadWebhooks = async () => {
     if (!token) return;
@@ -182,7 +185,7 @@ export default function AdminPage() {
     }
   };
 
-  if (loading || !user) {
+  if (loading || !user || !hasAdminSession) {
     return <div className="min-h-screen bg-slate-900 flex items-center justify-center"><p className="text-white">Laden...</p></div>;
   }
 

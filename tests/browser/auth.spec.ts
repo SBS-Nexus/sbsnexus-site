@@ -72,6 +72,33 @@ test("a forged cached admin profile without a token redirects", async ({ context
   await expect(page).toHaveURL(/\/login$/);
 });
 
+test("a regular session never requests admin data", async ({ context, page }) => {
+  await seed(context);
+  await validProfile(page);
+  const adminRequests: string[] = [];
+  await page.route("https://app.sbsdeutschland.com/api/nexus/admin/**", route => {
+    adminRequests.push(route.request().url());
+    return route.fulfill({ status: 403, json: {} });
+  });
+  await page.goto("/admin");
+  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page.getByText(profile.name, { exact: true })).toBeVisible();
+  expect(adminRequests).toEqual([]);
+});
+
+test("maintenance uses the signed-in user token", async ({ context, page }) => {
+  await seed(context);
+  const authorizations: string[] = [];
+  await page.route("https://app.sbsdeutschland.com/api/nexus/maintenance/**", route => {
+    authorizations.push(route.request().headers().authorization);
+    return route.fulfill({ json: route.request().url().endsWith("/stats") ? { total_requests: 0, this_month: 0, by_status: {}, by_urgency: {} } : { requests: [] } });
+  });
+  await page.goto("/maintenance");
+  await expect(page.getByText("Gesamt Alerts", { exact: true })).toBeVisible();
+  expect(authorizations).toHaveLength(2);
+  expect(authorizations.every(value => value === "Bearer synthetic-expired-access")).toBe(true);
+});
+
 test("public pages render without runtime errors", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));

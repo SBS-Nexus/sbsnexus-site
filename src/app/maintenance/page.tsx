@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { maintenanceAuthorization } from "@/lib/maintenanceAuth";
 
 interface MaintenanceRequest {
   request_id: string;
@@ -33,17 +34,19 @@ export default function MaintenancePage() {
     const stored = localStorage.getItem("sbs_user");
     if (!stored) { router.push("/login"); return; }
 
-    const API_KEY = "sbs_nexus_secret_2026";
+    let authorization: string;
+    try { authorization = maintenanceAuthorization(); }
+    catch { router.replace("/login"); return; }
     
     fetch("https://app.sbsdeutschland.com/api/nexus/maintenance/stats", {
-      headers: { "Authorization": API_KEY }
+      headers: { "Authorization": authorization }
     })
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(() => {});
 
     fetch("https://app.sbsdeutschland.com/api/nexus/maintenance/requests?limit=50", {
-      headers: { "Authorization": API_KEY }
+      headers: { "Authorization": authorization }
     })
       .then(res => res.json())
       .then(data => setRequests(data.requests || []))
