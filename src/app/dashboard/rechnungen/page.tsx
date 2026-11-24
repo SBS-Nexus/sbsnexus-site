@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
+import { useStoredValue } from "@/lib/useStoredValue";
 
 const API = "https://app.sbsdeutschland.com/api/erechnung";
 
@@ -65,8 +67,11 @@ const TRANSITION_ACTIONS: Record<string, { label: string; icon: string; style: s
 };
 
 export default function ERechnungenPage() {
-  const [user, setUser] = useState<{ id: number; name: string; email?: string } | null>(null);
-  const [tenantId, setTenantId] = useState<string>("");
+  const storedUser = useStoredValue("sbs_user");
+  const user = useMemo<{ id: number; name: string; email?: string } | null>(() => {
+    try { return storedUser ? JSON.parse(storedUser) : null; } catch { return null; }
+  }, [storedUser]);
+  const tenantId = user?.id == null ? "" : `tenant-${user.id}`;
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [selected, setSelected] = useState<InvoiceDetail | null>(null);
   const [events, setEvents] = useState<AuditEvent[]>([]);
@@ -83,9 +88,8 @@ export default function ERechnungenPage() {
   useEffect(() => {
     const stored = localStorage.getItem("sbs_user");
     if (!stored) { router.push("/login"); return; }
-    const u = JSON.parse(stored);
-    setUser(u);
-    setTenantId(`tenant-${u.id}`);
+    try { if (JSON.parse(stored)?.id == null) router.push("/login"); }
+    catch { router.push("/login"); }
   }, [router]);
 
   const headers = useCallback(() => ({
@@ -98,21 +102,30 @@ export default function ERechnungenPage() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // Fetch invoices
-  const fetchInvoices = useCallback(async () => {
-    if (!tenantId) return;
-    try {
-      const url = filterStatus
-        ? `${API}/invoices?status=${filterStatus}&limit=100`
-        : `${API}/invoices?limit=100`;
-      const res = await fetch(url, { headers: headers() });
-      const data = await res.json();
-      setInvoices(data.items || []);
-    } catch { setInvoices([]); }
-    setLoading(false);
-  }, [tenantId, filterStatus, headers]);
+  const fetchInvoiceData = useCallback(async () => {
+    const url = filterStatus
+      ? `${API}/invoices?status=${filterStatus}&limit=100`
+      : `${API}/invoices?limit=100`;
+    const response = await fetch(url, { headers: headers() });
+    if (!response.ok) throw new Error("Invoices unavailable");
+    const data = await response.json();
+    return (data.items || []) as Invoice[];
+  }, [filterStatus, headers]);
 
-  useEffect(() => { fetchInvoices(); }, [fetchInvoices]);
+  const fetchInvoices = () => {
+    if (!tenantId) return;
+    return fetchInvoiceData().then(setInvoices).catch(() => setInvoices([]))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    if (!tenantId) return;
+    let active = true;
+    void fetchInvoiceData().then(items => { if (active) setInvoices(items); })
+      .catch(() => { if (active) setInvoices([]); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [fetchInvoiceData, tenantId]);
 
   // Select invoice
   const selectInvoice = async (docId: string) => {

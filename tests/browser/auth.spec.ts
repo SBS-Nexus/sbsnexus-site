@@ -110,3 +110,48 @@ test("public pages render without runtime errors", async ({ page }) => {
   await expect(page.getByText("Ungültiger Link", { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test("invoice loading uses the current session tenant without repeated fetches", async ({ context, page }) => {
+  await seed(context);
+  await validProfile(page);
+  const tenants: string[] = [];
+  await page.route(`${api}/invoices?**`, route => {
+    tenants.push(route.request().headers()["x-tenant-id"]);
+    return route.fulfill({ json: { items: [] } });
+  });
+  await page.goto("/dashboard/rechnungen");
+  await expect(page.getByText(profile.name, { exact: true })).toBeVisible();
+  await expect.poll(() => tenants.length).toBe(1);
+  expect(tenants).toEqual(["tenant-17"]);
+});
+
+test("copilot sends the current tenant and renders the simulated reply", async ({ context, page }) => {
+  await seed(context);
+  await validProfile(page);
+  await page.route(`${api}/copilot/chat`, route => {
+    expect(route.request().headers()["x-tenant-id"]).toBe("tenant-17");
+    expect(route.request().postDataJSON().question).toBe("Synthetic question");
+    return route.fulfill({ json: { answer: "Synthetic reply", model: "mock", suggested_questions: [] } });
+  });
+  await page.goto("/dashboard/copilot");
+  await page.getByPlaceholder("Frage zu Rechnungen, Kontierungen, DATEV...").fill("Synthetic question");
+  await page.getByRole("button", { name: "Senden", exact: true }).click();
+  await expect(page.getByText("Synthetic reply", { exact: true })).toBeVisible();
+});
+
+test("analytics starts with the session tenant instead of a demo fallback", async ({ context, page }) => {
+  await seed(context);
+  await validProfile(page);
+  const tenants: string[] = [];
+  await page.route(`${api}/analytics/dashboard?**`, route => {
+    tenants.push(route.request().headers()["x-tenant-id"]);
+    return route.fulfill({ json: {
+      kpis: { total_invoices: 0, period_invoices: 0, pending_review: 0, approved: 0, exported: 0, completion_rate: 0 },
+      status_distribution: [], timeline: [], recent_activity: [], processing_speed: { formatted: "0s" },
+      kontierung_performance: { total: 0, avg_confidence: 0, confidence_distribution: { high: 0, medium: 0, low: 0 }, models: {}, top_konten: [] },
+    } });
+  });
+  await page.goto("/dashboard/analytics");
+  await expect(page.getByRole("heading", { name: "Analytics", exact: true })).toBeVisible();
+  expect(tenants).toEqual(["tenant-17"]);
+});
