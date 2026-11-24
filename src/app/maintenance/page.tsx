@@ -47,9 +47,8 @@ export default function MaintenancePage() {
     })
       .then(res => res.json())
       .then(data => setRequests(data.requests || []))
-      .catch(() => {});
-
-    setLoading(false);
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, [router]);
 
   const getUrgencyColor = (urgency: string) => {

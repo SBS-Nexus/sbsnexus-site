@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface Notification {
   id: number;
@@ -18,11 +18,7 @@ export default function NotificationBell({ userId, token }: { userId: number; to
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    loadNotifications();
-    const interval = setInterval(loadNotifications, 30000);
-    return () => clearInterval(interval);
-  }, [userId]);
+
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -34,16 +30,29 @@ export default function NotificationBell({ userId, token }: { userId: number; to
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const loadNotifications = async () => {
-    try {
-      const res = await fetch(`https://app.sbsdeutschland.com/api/nexus/notifications/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setNotifications(data.notifications || []);
-      setUnreadCount(data.unread_count || 0);
-    } catch {}
-  };
+  const fetchNotifications = useCallback(async () => {
+    const res = await fetch(`https://app.sbsdeutschland.com/api/nexus/notifications/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.json() as Promise<{ notifications?: Notification[]; unread_count?: number }>;
+  }, [userId, token]);
+
+  const applyNotifications = useCallback((data: { notifications?: Notification[]; unread_count?: number }) => {
+    setNotifications(data.notifications || []);
+    setUnreadCount(data.unread_count || 0);
+  }, []);
+
+  const loadNotifications = () => fetchNotifications().then(applyNotifications).catch(() => {});
+
+  useEffect(() => {
+    let active = true;
+    const refresh = () => fetchNotifications().then(data => {
+      if (active) applyNotifications(data);
+    }).catch(() => {});
+    void refresh();
+    const interval = setInterval(refresh, 30000);
+    return () => { active = false; clearInterval(interval); };
+  }, [fetchNotifications, applyNotifications]);
 
   const markAsRead = async (id: number) => {
     await fetch(`https://app.sbsdeutschland.com/api/nexus/notifications/${id}/read`, {

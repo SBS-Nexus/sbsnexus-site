@@ -35,8 +35,8 @@ export default function RegisterPage() {
       localStorage.setItem("sbs_refresh", data.tokens.refresh_token);
       localStorage.setItem("sbs_user", JSON.stringify(data.user));
       window.location.href = "/dashboard";
-    } catch (err: any) {
-      setError(err.message || "Verbindungsfehler");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Verbindungsfehler");
     } finally {
       setLoading(false);
     }

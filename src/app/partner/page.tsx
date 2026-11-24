@@ -1,42 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 /* ────────────────────────────────────────────────────────────
    SBS Nexus – Steuerberater Partner-Programm Landing Page
    Enterprise-Grade • Conversion-Optimized • DACH Market
    ──────────────────────────────────────────────────────────── */
-
-// ── Animated Counter ─────────────────────────────────────────
-function AnimatedNumber({ target, suffix = '', prefix = '', duration = 2000 }: {
-  target: number; suffix?: string; prefix?: string; duration?: number;
-}) {
-  const [current, setCurrent] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !hasAnimated.current) {
-        hasAnimated.current = true;
-        const start = performance.now();
-        const animate = (now: number) => {
-          const elapsed = now - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          setCurrent(Math.floor(eased * target));
-          if (progress < 1) requestAnimationFrame(animate);
-        };
-        requestAnimationFrame(animate);
-      }
-    }, { threshold: 0.3 });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return <span ref={ref}>{prefix}{current.toLocaleString('de-DE')}{suffix}</span>;
-}
 
 // ── ROI Calculator ───────────────────────────────────────────
 function ROICalculator() {
@@ -207,7 +177,10 @@ function ROICalculator() {
 // ── Main Page Component ──────────────────────────────────────
 export default function PartnerPage() {
   const [isVisible, setIsVisible] = useState(false);
-  useEffect(() => { setIsVisible(true); }, []);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setIsVisible(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
@@ -636,7 +609,7 @@ export default function PartnerPage() {
               fontSize: '13px', fontWeight: 700, color: '#FFB900',
               textTransform: 'uppercase' as const, letterSpacing: '0.1em', marginBottom: '16px',
             }}>
-              So funktioniert's
+              So funktioniert&apos;s
             </div>
             <h2 style={{
               fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 800,

@@ -97,9 +97,9 @@ export default function BlogPostDATEV() {
             <div className="bg-slate-800/50 rounded-xl p-6 my-8">
               <h3 className="text-lg font-semibold text-white mb-4">Die 3 Grenzen klassischer OCR</h3>
               <ol className="list-decimal list-inside text-slate-300 space-y-3">
-                <li><strong className="text-white">Keine Kontextverständnis:</strong> OCR erkennt "1.250,00 €", weiß aber nicht, ob das Netto, Brutto oder MwSt ist.</li>
+                <li><strong className="text-white">Keine Kontextverständnis:</strong> OCR erkennt &quot;1.250,00 €&quot;, weiß aber nicht, ob das Netto, Brutto oder MwSt ist.</li>
                 <li><strong className="text-white">Keine DATEV-Logik:</strong> Die Zuordnung zum richtigen Sachkonto erfordert Steuer-Know-how.</li>
-                <li><strong className="text-white">Keine Fehlerkorrektur:</strong> Wenn der Scanner "I" statt "1" erkennt, wird die Rechnung falsch gebucht.</li>
+                <li><strong className="text-white">Keine Fehlerkorrektur:</strong> Wenn der Scanner &quot;I&quot; statt &quot;1&quot; erkennt, wird die Rechnung falsch gebucht.</li>
               </ol>
             </div>
 
@@ -167,9 +167,9 @@ export default function BlogPostDATEV() {
               <strong className="text-white"> in weniger als 6 Monaten</strong>.
             </p>
 
-            <h2 className="text-2xl font-bold text-white mt-12 mb-4">Der DATEV-Export: Warum "native" wichtig ist</h2>
+            <h2 className="text-2xl font-bold text-white mt-12 mb-4">Der DATEV-Export: Warum &quot;native&quot; wichtig ist</h2>
             <p className="text-slate-300 mb-6">
-              Viele Tools werben mit "DATEV-kompatibel". Das bedeutet oft nur: Sie exportieren eine CSV-Datei. 
+              Viele Tools werben mit &quot;DATEV-kompatibel&quot;. Das bedeutet oft nur: Sie exportieren eine CSV-Datei.
               Der Unterschied zu einer <strong className="text-white">nativen DATEV-Integration</strong>:
             </p>
             <ul className="list-disc list-inside text-slate-300 mb-6 space-y-2">
