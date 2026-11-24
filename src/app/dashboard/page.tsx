@@ -1,20 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useStoredValue } from "@/lib/useStoredValue";
 import Link from "next/link";
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("sbs_user");
-      if (stored) setUser(JSON.parse(stored));
-      else setUser({ name: "User", email: "" });
-    } catch {
-      setUser({ name: "User", email: "" });
+  const storedUser = useStoredValue("sbs_user");
+  let user: { name: string; email: string } = { name: "User", email: "" };
+  try {
+    const parsed: unknown = storedUser ? JSON.parse(storedUser) : null;
+    if (parsed && typeof parsed === "object" && "name" in parsed && typeof parsed.name === "string") {
+      user = { name: parsed.name, email: "email" in parsed && typeof parsed.email === "string" ? parsed.email : "" };
     }
-  }, []);
+  } catch { /* A malformed cache must not prevent rendering the dashboard. */ }
 
   if (!user) return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center">

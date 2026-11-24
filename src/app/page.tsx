@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useStoredValue } from "@/lib/useStoredValue";
 import Link from "next/link";
 
 export default function HomePage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = Boolean(useStoredValue("sbs_token"));
   const [mobileMenu, setMobileMenu] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("sbs_token");
-    setIsLoggedIn(!!token);
-  }, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">

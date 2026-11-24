@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useStoredValue } from "@/lib/useStoredValue";
 
 interface User {
   id: number;
@@ -33,7 +34,9 @@ interface CurrentUser {
 }
 
 export default function AdminPage() {
-  const [user, setUser] = useState<CurrentUser | null>(null);
+  const storedUser = useStoredValue("sbs_user");
+  let user: CurrentUser | null = null;
+  try { user = storedUser ? JSON.parse(storedUser) : null; } catch { /* Invalid cache is unauthenticated. */ }
   const [users, setUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [activeTab, setActiveTab] = useState<"overview" | "users" | "broadcast" | "audit" | "webhooks">("overview");
@@ -49,7 +52,7 @@ export default function AdminPage() {
   const [createPassword, setCreatePassword] = useState("");
   const [createAdmin, setCreateAdmin] = useState(false);
   const [message, setMessage] = useState("");
-  const [token, setToken] = useState<string | null>(null);
+  const token = useStoredValue("sbs_token");
   const [broadcastTitle, setBroadcastTitle] = useState("");
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [broadcastType, setBroadcastType] = useState("info");
@@ -63,38 +66,49 @@ export default function AdminPage() {
     return u.is_admin === true || u.role === "admin";
   };
 
-  const authHeaders = () => ({
+  const hasAdminSession = Boolean(token && isAdmin(user));
+
+  const authHeaders = useCallback(() => ({
     "Content-Type": "application/json",
     "Authorization": `Bearer ${token}`
-  });
+  }), [token]);
 
   useEffect(() => {
+    // Read storage here so the server hydration snapshot cannot trigger a false redirect.
     const stored = localStorage.getItem("sbs_user");
     const storedToken = localStorage.getItem("sbs_token");
     if (!stored || !storedToken) { router.push("/login"); return; }
-    const userData: CurrentUser = JSON.parse(stored);
-    if (!isAdmin(userData)) { router.push("/dashboard"); return; }
-    setUser(userData);
-    setToken(storedToken);
+    try {
+      if (!isAdmin(JSON.parse(stored))) router.push("/dashboard");
+    } catch { router.push("/login"); }
   }, [router]);
 
-  useEffect(() => {
-    if (token) loadData();
-  }, [token]);
+  const fetchData = useCallback(async () => {
+    if (!hasAdminSession) return {};
+    const [usersRes, statsRes] = await Promise.all([
+      fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", { headers: authHeaders() }),
+      fetch("https://app.sbsdeutschland.com/api/nexus/admin/stats", { headers: authHeaders() })
+    ]);
+    return {
+      users: usersRes.ok ? await usersRes.json() : undefined,
+      stats: statsRes.ok ? await statsRes.json() : undefined,
+    };
+  }, [authHeaders, hasAdminSession]);
 
-  const loadData = async () => {
-    if (!token) return;
-    setLoading(true);
-    try {
-      const [usersRes, statsRes] = await Promise.all([
-        fetch("https://app.sbsdeutschland.com/api/nexus/admin/users", { headers: authHeaders() }),
-        fetch("https://app.sbsdeutschland.com/api/nexus/admin/stats", { headers: authHeaders() })
-      ]);
-      if (usersRes.ok) { const data = await usersRes.json(); setUsers(data.users || data); }
-      if (statsRes.ok) setStats(await statsRes.json());
-    } catch {}
-    setLoading(false);
-  };
+  const applyData = useCallback((data: { users?: User[] | { users: User[] }; stats?: AdminStats }) => {
+    if (data.users) setUsers(Array.isArray(data.users) ? data.users : data.users.users);
+    if (data.stats) setStats(data.stats);
+  }, []);
+
+  const loadData = () => fetchData().then(applyData).catch(() => {}).finally(() => setLoading(false));
+
+  useEffect(() => {
+    if (!hasAdminSession) return;
+    let active = true;
+    void fetchData().then(data => { if (active) applyData(data); })
+      .catch(() => {}).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [hasAdminSession, fetchData, applyData]);
 
   const loadWebhooks = async () => {
     if (!token) return;
@@ -171,7 +185,7 @@ export default function AdminPage() {
     }
   };
 
-  if (loading || !user) {
+  if (loading || !user || !hasAdminSession) {
     return <div className="min-h-screen bg-slate-900 flex items-center justify-center"><p className="text-white">Laden...</p></div>;
   }
 

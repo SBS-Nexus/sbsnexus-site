@@ -35,3 +35,7 @@ For changes to the current marketing site, first establish its verified deployme
 Legacy Resend integrations read `RESEND_API_KEY` from the runtime environment. Missing or blank configuration stops the outbound request. Configure credentials in the hosting secret store; never commit them to source. Previewing content does not require a mail credential.
 
 Run the offline credential regression with `python -m unittest discover -s tests -p test_resend_configuration.py -v`. HTTP and database interactions are mocked and all fixtures are synthetic.
+
+### Legacy maintenance integration
+
+The historical browser-embedded maintenance credential has been removed. A read-only request to the existing API with `limit=0` returned HTTP 401 on 2026-11-24; no customer records were requested. Maintenance browser requests now use the signed-in user bearer token and fail locally when it is missing. The backend must independently validate the token and enforce user/tenant ownership; client-side gates are not authorization. Live authenticated maintenance compatibility has not been verified, and this repository is not the current SBS marketing deployment.

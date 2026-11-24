@@ -79,7 +79,7 @@ export default function CopilotPage() {
         suggestions: data.suggested_questions,
       };
       setMessages((prev) => [...prev, assistantMsg]);
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {

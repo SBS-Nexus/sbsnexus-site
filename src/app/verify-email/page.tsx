@@ -11,7 +11,7 @@ function VerifyForm() {
   const token = searchParams.get("token");
 
   useEffect(() => {
-    if (!token) { setStatus("error"); return; }
+    if (!token) return;
     
     fetch(`https://app.sbsdeutschland.com/api/nexus/auth/verify-email?token=${token}`, {
       method: "POST"
@@ -24,11 +24,11 @@ function VerifyForm() {
       .catch(() => setStatus("error"));
   }, [token]);
 
-  if (status === "loading") {
+  if (token && status === "loading") {
     return <div className="text-center"><p className="text-gray-600">Wird verifiziert...</p></div>;
   }
 
-  if (status === "error") {
+  if (!token || status === "error") {
     return (
       <div className="text-center">
         <span className="text-5xl">❌</span>

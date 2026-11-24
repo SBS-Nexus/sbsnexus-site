@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import type { Recommendation } from "@/lib/maintenanceTypes";
 import Link from "next/link";
+import { maintenanceAuthorization } from "@/lib/maintenanceAuth";
 
 export default function NewMaintenancePage() {
   const [image, setImage] = useState<string | null>(null);
@@ -11,10 +12,9 @@ export default function NewMaintenancePage() {
   const [machineId, setMachineId] = useState("");
   const [urgency, setUrgency] = useState("normal");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ recommendation?: Recommendation } | null>(null);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -49,7 +49,7 @@ export default function NewMaintenancePage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "sbs_nexus_secret_2026",
+          "Authorization": maintenanceAuthorization(),
         },
         body: JSON.stringify({
           image_base64: image,
@@ -63,8 +63,8 @@ export default function NewMaintenancePage() {
       if (!res.ok) throw new Error(`Fehler: ${res.status}`);
       const data = await res.json();
       setResult(data);
-    } catch (err: any) {
-      setError(err.message || "Verbindungsfehler");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Verbindungsfehler");
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
@@ -15,8 +15,22 @@ const LABELS: Record<string, string> = {
   archived:"Archiviert", rejected:"Abgelehnt", error:"Fehler",
 };
 
+interface AnalyticsData {
+  kpis: { total_invoices: number; period_invoices: number; pending_review: number; approved: number; exported: number; completion_rate: number };
+  status_distribution: { status: string; count: number; color: string }[];
+  timeline: { week: string; count: number }[];
+  kontierung_performance: {
+    total: number; avg_confidence: number;
+    confidence_distribution: { high: number; medium: number; low: number };
+    models: Record<string, number>;
+    top_konten: { konto: string; count: number }[];
+  };
+  recent_activity: { icon: string; file_name?: string; document_id: string; to?: string; actor: string; timestamp?: string }[];
+  processing_speed: { formatted: string };
+}
+
 export default function AnalyticsPage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState(90);
   const [tid, setTid] = useState("test-ai-live");
@@ -25,15 +39,14 @@ export default function AnalyticsPage() {
     try { const u = localStorage.getItem("sbs_user"); if (u) setTid("tenant-"+JSON.parse(u).id); } catch {}
   }, []);
 
-  useEffect(() => { load(); }, [period, tid]);
-
-  const load = async () => {
-    setLoading(true);
+  const load = useCallback(async () => {
     try {
       const r = await fetch(API+"/analytics/dashboard?days="+period, {headers:{"X-Tenant-ID":tid}});
       if (r.ok) setData(await r.json());
     } catch {} finally { setLoading(false); }
-  };
+  }, [period, tid]);
+
+  useEffect(() => { void load(); }, [load]);
 
   const fmtW = (w: string) => { const d = new Date(w); return d.getDate()+"."+(d.getMonth()+1); };
 
@@ -58,7 +71,7 @@ export default function AnalyticsPage() {
     {name:"Hoch (>85%)", value:kp.confidence_distribution.high, color:"#10b981"},
     {name:"Mittel (70-85%)", value:kp.confidence_distribution.medium, color:"#f59e0b"},
     {name:"Niedrig (<70%)", value:kp.confidence_distribution.low, color:"#ef4444"},
-  ].filter((d: any) => d.value > 0);
+  ].filter((d) => d.value > 0);
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
@@ -74,7 +87,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="flex gap-2">
             {[30,90,180].map(d => (
-              <button key={d} onClick={() => setPeriod(d)}
+              <button key={d} onClick={() => { if (period !== d) { setLoading(true); setPeriod(d); } }}
                 className={"px-3 py-1.5 rounded-lg text-xs font-medium transition "+(period===d?"bg-cyan-600 text-white":"bg-slate-800 text-slate-400 border border-slate-700")}>
                 {d}T
               </button>
@@ -123,8 +136,8 @@ export default function AnalyticsPage() {
             {sd.length > 0 ? (
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart><Pie data={sd} dataKey="count" nameKey="status" cx="50%" cy="50%" innerRadius={50} outerRadius={85} paddingAngle={3}
-                  label={({status,count}: any) => (LABELS[status]||status)+" ("+count+")"}>
-                  {sd.map((e: any,i: number) => <Cell key={i} fill={e.color}/>)}
+                  label={({ index }) => { const entry = sd[index]; return entry ? (LABELS[entry.status] || entry.status) + " (" + entry.count + ")" : ""; }}>
+                  {sd.map((e,i) => <Cell key={i} fill={e.color}/>)}
                 </Pie><Tooltip contentStyle={{background:"#1e293b",border:"1px solid #334155",borderRadius:8,fontSize:12}}/></PieChart>
               </ResponsiveContainer>
             ) : <div className="h-[260px] flex items-center justify-center text-slate-500 text-sm">Keine Daten</div>}
@@ -136,7 +149,7 @@ export default function AnalyticsPage() {
             <h3 className="text-sm font-semibold text-slate-300 mb-1">KI-Kontierung</h3>
             <p className="text-xs text-slate-500 mb-4">{kp.total} Kontierungen | Confidence: {(kp.avg_confidence*100).toFixed(0)}%</p>
             <div className="grid grid-cols-3 gap-3 mb-4">
-              {Object.entries(kp.models).map(([m,c]: any) => (
+              {Object.entries(kp.models).map(([m,c]) => (
                 <div key={m} className="bg-slate-700/30 rounded-lg p-3 text-center">
                   <div className="text-lg font-bold">{c}</div><div className="text-xs text-slate-400 truncate">{m}</div>
                 </div>
@@ -145,7 +158,7 @@ export default function AnalyticsPage() {
             {conf.length > 0 && (
               <ResponsiveContainer width="100%" height={180}>
                 <PieChart><Pie data={conf} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}>
-                  {conf.map((e: any,i: number) => <Cell key={i} fill={e.color}/>)}
+                  {conf.map((e,i) => <Cell key={i} fill={e.color}/>)}
                 </Pie><Legend verticalAlign="bottom" iconSize={8}/><Tooltip contentStyle={{background:"#1e293b",border:"1px solid #334155",borderRadius:8,fontSize:12}}/></PieChart>
               </ResponsiveContainer>
             )}
@@ -169,7 +182,7 @@ export default function AnalyticsPage() {
         <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6">
           <h3 className="text-sm font-semibold text-slate-300 mb-4">Letzte Aktivit\u00e4ten</h3>
           <div className="space-y-2">
-            {ra.map((a: any,i: number) => (
+            {ra.map((a,i) => (
               <div key={i} className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-slate-700/30 transition">
                 <span className="text-sm font-mono">{a.icon}</span>
                 <div className="flex-1 min-w-0">

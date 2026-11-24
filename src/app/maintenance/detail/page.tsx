@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { maintenanceAuthorization } from "@/lib/maintenanceAuth";
 import { Suspense } from "react";
+import type { MaintenanceDetail } from "@/lib/maintenanceTypes";
 
 function MaintenanceDetailContent() {
-  const [request, setRequest] = useState<any>(null);
+  const [request, setRequest] = useState<MaintenanceDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -15,11 +17,13 @@ function MaintenanceDetailContent() {
   useEffect(() => {
     const stored = localStorage.getItem("sbs_user");
     if (!stored) { router.push("/login"); return; }
-    if (!requestId) { setError("Keine Request-ID"); setLoading(false); return; }
+    if (!requestId) return;
 
-    const API_KEY = "sbs_nexus_secret_2026";
+    let authorization: string;
+    try { authorization = maintenanceAuthorization(); }
+    catch { router.replace("/login"); return; }
     fetch(`https://app.sbsdeutschland.com/api/nexus/maintenance/requests/${requestId}`, {
-      headers: { "Authorization": API_KEY }
+      headers: { "Authorization": authorization }
     })
       .then(res => {
         if (!res.ok) throw new Error("Request nicht gefunden");
@@ -44,15 +48,15 @@ function MaintenanceDetailContent() {
     return "text-red-400";
   };
 
-  if (loading) return (
+  if (requestId && loading) return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="text-amber-400 text-xl animate-pulse">Lade Analyse...</div>
     </div>
   );
 
-  if (error || !request) return (
+  if (!requestId || error || !request) return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-4">
-      <p className="text-red-400 text-lg">{error || "Request nicht gefunden"}</p>
+      <p className="text-red-400 text-lg">{!requestId ? "Keine Request-ID" : error || "Request nicht gefunden"}</p>
       <Link href="/maintenance" className="text-amber-400 hover:underline">← Zurück zum Dashboard</Link>
     </div>
   );
@@ -202,7 +206,7 @@ function MaintenanceDetailContent() {
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
             <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Bestellhistorie</h3>
             {request.invoice_history && request.invoice_history.length > 0 ? (
-              request.invoice_history.map((inv: any, i: number) => (
+              request.invoice_history.map((inv, i) => (
                 <p key={i} className="text-slate-300 text-sm">{inv.supplier} – {inv.amount}€ ({inv.date})</p>
               ))
             ) : <p className="text-slate-500">Keine bisherigen Bestellungen gefunden</p>}

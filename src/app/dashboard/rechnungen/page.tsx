@@ -506,7 +506,7 @@ export default function ERechnungenPage() {
                         </div>
                       ) : (
                         <div className="text-center py-6">
-                          <p className="text-slate-500 text-sm">Noch keine Kontierung. Klicke "🤖 KI Kontierung" um einen Vorschlag zu erhalten.</p>
+                          <p className="text-slate-500 text-sm">Noch keine Kontierung. Klicke &quot;🤖 KI Kontierung&quot; um einen Vorschlag zu erhalten.</p>
                         </div>
                       )
                     )}

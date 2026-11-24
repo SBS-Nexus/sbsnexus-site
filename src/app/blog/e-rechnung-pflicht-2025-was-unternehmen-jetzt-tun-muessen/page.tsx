@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Head from 'next/head';
 
 export default function BlogPostERechnung() {
   return (
