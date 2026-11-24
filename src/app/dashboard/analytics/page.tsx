@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
   AreaChart, Area, CartesianGrid,
 } from "recharts";
+
+import { useStoredValue } from "@/lib/useStoredValue";
 
 const API = "https://app.sbsdeutschland.com/api/erechnung";
 
@@ -33,20 +35,32 @@ export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState(90);
-  const [tid, setTid] = useState("test-ai-live");
-
-  useEffect(() => {
-    try { const u = localStorage.getItem("sbs_user"); if (u) setTid("tenant-"+JSON.parse(u).id); } catch {}
-  }, []);
-
-  const load = useCallback(async () => {
+  const storedUser = useStoredValue("sbs_user");
+  const tid = useMemo(() => {
     try {
-      const r = await fetch(API+"/analytics/dashboard?days="+period, {headers:{"X-Tenant-ID":tid}});
-      if (r.ok) setData(await r.json());
-    } catch {} finally { setLoading(false); }
+      const user = storedUser ? JSON.parse(storedUser) : null;
+      return user?.id == null ? "" : `tenant-${user.id}`;
+    } catch { return ""; }
+  }, [storedUser]);
+
+  const fetchData = useCallback(async () => {
+    const response = await fetch(API+"/analytics/dashboard?days="+period, { headers: { "X-Tenant-ID": tid } });
+    if (!response.ok) throw new Error("Analytics unavailable");
+    return response.json() as Promise<AnalyticsData>;
   }, [period, tid]);
 
-  useEffect(() => { void load(); }, [load]);
+  const load = () => {
+    if (!tid) return;
+    return fetchData().then(setData).catch(() => {}).finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    if (!tid) return;
+    let active = true;
+    void fetchData().then(value => { if (active) setData(value); })
+      .catch(() => {}).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [fetchData, tid]);
 
   const fmtW = (w: string) => { const d = new Date(w); return d.getDate()+"."+(d.getMonth()+1); };
 

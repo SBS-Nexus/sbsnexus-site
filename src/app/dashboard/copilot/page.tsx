@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+
+import { useStoredValue } from "@/lib/useStoredValue";
 
 const API_BASE = "https://app.sbsdeutschland.com/api/erechnung";
 
@@ -26,7 +28,11 @@ export default function CopilotPage() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [tenantId, setTenantId] = useState("test-ai-live");
+  const storedUser = useStoredValue("sbs_user");
+  const tenantId = useMemo(() => {
+    try { const user = storedUser ? JSON.parse(storedUser) : null; return user?.id == null ? "" : `tenant-${user.id}`; }
+    catch { return ""; }
+  }, [storedUser]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -34,19 +40,11 @@ export default function CopilotPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("sbs_user");
-      if (stored) {
-        const user = JSON.parse(stored);
-        setTenantId("tenant-" + user.id);
-      }
-    } catch {}
-  }, []);
+
 
   const sendMessage = async (text?: string) => {
     const question = text || input.trim();
-    if (!question || loading) return;
+    if (!question || loading || !tenantId) return;
 
     const userMsg: Message = { role: "user", content: question };
     setMessages((prev) => [...prev, userMsg]);

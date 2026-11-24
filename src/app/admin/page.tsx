@@ -98,7 +98,7 @@ export default function AdminPage() {
   const applyData = useCallback((data: { users?: User[] | { users: User[] }; stats?: AdminStats }) => {
     if (data.users) setUsers(Array.isArray(data.users) ? data.users : data.users.users);
     if (data.stats) setStats(data.stats);
-  }, []);
+  }, [setUsers, setStats]);
 
   const loadData = () => fetchData().then(applyData).catch(() => {}).finally(() => setLoading(false));
 
